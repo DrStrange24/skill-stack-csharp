@@ -1,5 +1,4 @@
 using backend.Models;
-using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +8,6 @@ namespace backend.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
-
         private readonly ILogger<ProductController> _logger;
         private readonly IProductService _productService;
 
@@ -19,26 +17,75 @@ namespace backend.Controllers
             _productService = productService;
         }
 
+        // Get all products
         [HttpGet(Name = "GetProducts")]
-        public IEnumerable<ProductController> Get()
+        public async Task<IActionResult> Get()
         {
-            return null;
+            var products = await _productService.GetAllProductsAsync();
+            return Ok(products);
         }
 
+        // Get a product by Id
+        [HttpGet("{id:int}", Name = "GetProductById")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var product = await _productService.GetProductDetailsAsync(id);
+
+            if (product == null)
+                return NotFound($"Product with Id = {id} not found.");
+
+            return Ok(product);
+        }
+
+        // Create a new product (already provided but updated to async)
         [HttpPost(Name = "PostProduct")]
         public async Task<IActionResult> Post([FromBody] Product product)
         {
             if (product == null)
                 return BadRequest("Product is null.");
 
-            // Insert the product into your data store (e.g., database)
             await _productService.CreateProductAsync(product);
 
-            // For now, we just log the received product
-            _logger.LogInformation($"Received product: {product.Name}, Price: {product.Price}");
+            _logger.LogInformation($"Created product: {product.Name}, Price: {product.Price}");
 
-            // Return a response indicating that the product was created successfully
-            return CreatedAtRoute("GetProducts", new { id = product.Id }, product);
+            return CreatedAtRoute("GetProductById", new { id = product.Id }, product);
+        }
+
+        // Update an existing product
+        [HttpPut("{id:int}", Name = "UpdateProduct")]
+        public async Task<IActionResult> Update(int id, [FromBody] Product updatedProduct)
+        {
+            if (updatedProduct == null)
+                return BadRequest("Updated product is null.");
+
+            var product = await _productService.GetProductDetailsAsync(id);
+
+            if (product == null)
+                return NotFound($"Product with Id = {id} not found.");
+
+            // Update the product properties
+            product.Name = updatedProduct.Name;
+            product.Price = updatedProduct.Price;
+
+            await _productService.UpdateProductAsync(product);
+
+            return Ok(product);
+        }
+
+        // Delete a product by Id
+        [HttpDelete("{id:int}", Name = "DeleteProduct")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product = await _productService.GetProductDetailsAsync(id);
+
+            if (product == null)
+                return NotFound($"Product with Id = {id} not found.");
+
+            await _productService.DeleteProductAsync(product);
+
+            _logger.LogInformation($"Deleted product with Id = {id}");
+
+            return NoContent();
         }
     }
 }

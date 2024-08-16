@@ -1,10 +1,11 @@
 ﻿using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace backend.Services.Implementations
 {
-    // Services/ProductService.cs
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
@@ -14,16 +15,32 @@ namespace backend.Services.Implementations
             _productRepository = productRepository;
         }
 
-        public async Task CreateProductAsync(Product product)
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            _productRepository.AddProduct(product);
-            await _productRepository.SaveChangesAsync(); // Save changes to the database
+            return await _productRepository.GetAllProductsAsync();
         }
 
         public async Task<Product> GetProductDetailsAsync(int id)
         {
             return await _productRepository.GetProductByIdAsync(id);
         }
-    }
 
+        public async Task CreateProductAsync(Product product)
+        {
+            _productRepository.AddProduct(product);
+            await _productRepository.SaveChangesAsync(); // Save changes to the database
+        }
+
+        public async Task UpdateProductAsync(Product product)
+        {
+            _productRepository.UpdateProduct(product);
+            await _productRepository.SaveChangesAsync(); // Save changes to the database
+        }
+
+        public async Task DeleteProductAsync(Product product)
+        {
+            _productRepository.RemoveProduct(product);
+            await _productRepository.SaveChangesAsync(); // Save changes to the database
+        }
+    }
 }

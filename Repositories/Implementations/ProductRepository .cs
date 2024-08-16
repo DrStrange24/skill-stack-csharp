@@ -1,4 +1,7 @@
 ﻿using backend.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace backend.Repositories.Interfaces
 {
@@ -11,14 +14,9 @@ namespace backend.Repositories.Interfaces
             _context = context;
         }
 
-        public void AddProduct(Product product)
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            _context.Products.Add(product);
-        }
-
-        public Task<IEnumerable<Product>> GetAllProductsAsync()
-        {
-            throw new NotImplementedException();
+            return await _context.Products.ToListAsync();
         }
 
         public async Task<Product> GetProductByIdAsync(int id)
@@ -26,16 +24,24 @@ namespace backend.Repositories.Interfaces
             return await _context.Products.FindAsync(id);
         }
 
+        public void AddProduct(Product product)
+        {
+            _context.Products.Add(product);
+        }
+
+        public void UpdateProduct(Product product)
+        {
+            _context.Products.Update(product);
+        }
+
         public void RemoveProduct(Product product)
         {
-            throw new NotImplementedException();
+            _context.Products.Remove(product);
         }
 
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
-        // Additional query methods...
     }
-
 }
