@@ -26,13 +26,13 @@ namespace backend.Controllers
         }
 
         [HttpPost(Name = "PostProduct")]
-        public IActionResult Post([FromBody] Product product)
+        public async Task<IActionResult> Post([FromBody] Product product)
         {
             if (product == null)
                 return BadRequest("Product is null.");
 
             // Insert the product into your data store (e.g., database)
-            _productService.CreateProductAsync(product);
+            await _productService.CreateProductAsync(product);
 
             // For now, we just log the received product
             _logger.LogInformation($"Received product: {product.Name}, Price: {product.Price}");
