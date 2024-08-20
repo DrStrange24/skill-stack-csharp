@@ -7,9 +7,14 @@ Cheat Sheet:
 
 Account Registration 
 {
-  "userName": "string",
-  "email": "string",
-  "password": "string",
-  "firstName": "string",
-  "lastName": "string"
+  "username": "user1",
+  "email": "user1@gmail.com",
+  "password": "Password!1",
+  "firstName": "fn1",
+  "lastName": "ln1"
+}
+
+{
+  "usernameOrEmail": "user1",
+  "password": "Password!1"
 }

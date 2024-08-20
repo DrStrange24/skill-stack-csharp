@@ -1,9 +1,11 @@
 ﻿using backend.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<User>
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options)
     {
     }
 
@@ -11,8 +13,10 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
 
     // Configure your model here (optional)
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        // Customize your model here
+        base.OnModelCreating(builder);  // Ensure the Identity configurations are applied
+
+        // Further customization if needed
     }
 }
