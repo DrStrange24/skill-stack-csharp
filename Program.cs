@@ -2,6 +2,8 @@ using backend.Repositories.Interfaces;
 using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using backend.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,11 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     new MySqlServerVersion(new Version(8, 0, 21)))); // Adjust the MySQL version as per your setup
+
+// Add Identity services
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 // Register the repository and service
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -42,6 +49,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();  // Add this line to enable authentication
 app.UseAuthorization();
 
 app.MapControllers();
