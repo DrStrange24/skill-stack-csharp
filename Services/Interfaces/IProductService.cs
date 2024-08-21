@@ -1,7 +1,7 @@
-﻿using backend.Models;
-using backend.Repositories.Interfaces;
+﻿using WebApp.Models;
+using WebApp.Repositories.Interfaces;
 
-namespace backend.Services.Interfaces
+namespace WebApp.Services.Interfaces
 {
     public interface IProductService
     {

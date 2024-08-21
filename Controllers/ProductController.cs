@@ -1,8 +1,8 @@
-using backend.Models;
-using backend.Services.Interfaces;
+using WebApp.Models;
+using WebApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backend.Controllers
+namespace WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

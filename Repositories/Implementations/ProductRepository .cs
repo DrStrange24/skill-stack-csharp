@@ -1,9 +1,9 @@
-﻿using backend.Models;
+﻿using WebApp.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace backend.Repositories.Interfaces
+namespace WebApp.Repositories.Interfaces
 {
     public class ProductRepository : IProductRepository
     {

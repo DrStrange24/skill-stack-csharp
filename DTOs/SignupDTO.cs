@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace backend.DTOs
+namespace WebApp.DTOs
 {
     public class SignupDTO
     {

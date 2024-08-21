@@ -1,8 +1,8 @@
-﻿using backend.Models;
+﻿using WebApp.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace backend.Repositories.Interfaces
+namespace WebApp.Repositories.Interfaces
 {
     public interface IProductRepository
     {

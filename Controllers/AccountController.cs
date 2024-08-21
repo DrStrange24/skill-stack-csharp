@@ -1,9 +1,9 @@
-﻿using backend.DTOs;
-using backend.Models;
+﻿using WebApp.DTOs;
+using WebApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backend.Controllers
+namespace WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

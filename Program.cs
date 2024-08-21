@@ -1,9 +1,9 @@
-using backend.Repositories.Interfaces;
-using backend.Services.Implementations;
-using backend.Services.Interfaces;
+using WebApp.Repositories.Interfaces;
+using WebApp.Services.Implementations;
+using WebApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using backend.Models;
+using WebApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

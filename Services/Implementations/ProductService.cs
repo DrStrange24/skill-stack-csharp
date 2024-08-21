@@ -1,10 +1,10 @@
-﻿using backend.Models;
-using backend.Repositories.Interfaces;
-using backend.Services.Interfaces;
+﻿using WebApp.Models;
+using WebApp.Repositories.Interfaces;
+using WebApp.Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace backend.Services.Implementations
+namespace WebApp.Services.Implementations
 {
     public class ProductService : IProductService
     {

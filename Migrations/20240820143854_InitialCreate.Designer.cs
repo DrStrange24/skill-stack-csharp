@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace backend.Migrations
+namespace WebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20240820143854_InitialCreate")]

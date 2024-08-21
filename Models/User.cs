@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace backend.Models
+namespace WebApp.Models
 {
     public class User: IdentityUser
     {
