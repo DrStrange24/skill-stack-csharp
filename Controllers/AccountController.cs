@@ -3,6 +3,7 @@ using PersonalWebApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PersonalWebApp.Services.Implementations;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace PersonalWebApp.Controllers
 {
@@ -13,16 +14,19 @@ namespace PersonalWebApp.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly JwtTokenService _jwtTokenService;
+        private readonly IEmailSender _emailSender;
 
         public AccountController(
             UserManager<User> userManager, 
             SignInManager<User> signInManager,
-            JwtTokenService jwtTokenService
+            JwtTokenService jwtTokenService,
+            IEmailSender emailSender
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtTokenService = jwtTokenService;
+            _emailSender = emailSender;
         }
 
         [HttpPost("signup")]
@@ -87,6 +91,56 @@ namespace PersonalWebApp.Controllers
             if (result.IsLockedOut) return Forbid("User account is locked out.");
 
             return Unauthorized("Invalid login attempt.");
+        }
+
+        [HttpPost("generate-email-confirmation")]
+        public async Task<IActionResult> GenerateEmailConfirmation([FromBody] EmailConfirmationRequestDTO model)
+        {
+            if (string.IsNullOrEmpty(model.Email))
+            {
+                return BadRequest(new { Message = "Email is required." });
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found." });
+            }
+
+            if (user.EmailConfirmed)
+            {
+                return BadRequest(new { Message = "This email is already confirmed." });
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token = token }, Request.Scheme);
+
+            await _emailSender.SendEmailAsync(user.Email, "Confirm your email", $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>link</a>");
+
+            return Ok(new { Message = "Confirmation email sent. Please check your email." });
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new { Message = "User ID and token are required." });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { Message = $"Unable to find user with ID '{userId}'." });
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return Ok(new { Message = "Email confirmed successfully!" });
+            }
+
+            return BadRequest(new { Message = "Error confirming email.", Errors = result.Errors });
         }
 
     }
