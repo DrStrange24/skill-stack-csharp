@@ -31,6 +31,9 @@ namespace PersonalWebApp.Services.Implementations
         public async Task<UserDTO> GetUserByIdAsync(string id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
+
+            if (user == null) return null;
+
             var userDTO = new UserDTO() { 
                 Id = user.Id,
                 Email = user.Email,
@@ -39,6 +42,7 @@ namespace PersonalWebApp.Services.Implementations
                 Username = user.UserName,
                 EmailConfirmed = user.EmailConfirmed,
             };
+
             return userDTO;
         }
 

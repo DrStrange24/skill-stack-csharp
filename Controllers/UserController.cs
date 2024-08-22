@@ -21,6 +21,7 @@ namespace PersonalWebApp.Controllers
         [HttpGet(Name = "GetUsers")]
         public async Task<IActionResult> Get()
         {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
@@ -41,6 +42,7 @@ namespace PersonalWebApp.Controllers
         [HttpPost(Name = "PostUser")]
         public async Task<IActionResult> Post([FromBody] User user)
         {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             if (user == null)
                 return BadRequest("User is null.");
 
@@ -55,6 +57,7 @@ namespace PersonalWebApp.Controllers
         [HttpPut("{id}", Name = "UpdateUser")]
         public async Task<IActionResult> Update(string id, [FromBody] User updatedUser)
         {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             if (updatedUser == null)
                 return BadRequest("Updated user is null.");
 
@@ -76,6 +79,7 @@ namespace PersonalWebApp.Controllers
         [HttpDelete("{id}", Name = "DeleteUser")]
         public async Task<IActionResult> Delete(string id)
         {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             var user = await _userService.GetUserByIdAsync(id);
 
             if (user == null)
