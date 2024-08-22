@@ -36,30 +36,25 @@ namespace PersonalWebApp.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] SignupDTO model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)return BadRequest(ModelState);
+            var user = new User
             {
-                var user = new User
-                {
-                    UserName = model.Username,
-                    Email = model.Email,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                };
+                UserName = model.Username,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+            };
 
-                // Save the user to the database
-                var result = await _userManager.CreateAsync(user, model.Password);
+            // Save the user to the database
+            var result = await _userManager.CreateAsync(user, model.Password);
 
-                if (result.Succeeded)
-                {
-                    return Ok(new { Message = "User created successfully!" });
-                }
-                else
-                {
-                    return BadRequest(result.Errors);
-                }
+            if (result.Succeeded)
+            {
+                SendEmailConfirmation(user);
+                return Ok(new { Message = "User created successfully!" });
             }
 
-            return BadRequest(ModelState);
+            return BadRequest(result.Errors);
         }
 
         [HttpPost("login")]
@@ -73,7 +68,11 @@ namespace PersonalWebApp.Controllers
             if (user == null) return Unauthorized("Invalid login attempt.");
 
             // Check if the email is confirmed
-            if (!await _userManager.IsEmailConfirmedAsync(user)) return Unauthorized("You need to confirm your email before logging in.");
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                SendEmailConfirmation(user);
+                return Unauthorized("You need to confirm your email before logging in. Please check your email for confirmation.");
+            }
 
             // Attempt to sign in the user
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
@@ -97,34 +96,6 @@ namespace PersonalWebApp.Controllers
             return Unauthorized("Invalid login attempt.");
         }
 
-        [HttpPost("generate-email-confirmation")]
-        [Authorize]
-        public async Task<IActionResult> GenerateEmailConfirmation([FromBody] EmailConfirmationRequestDTO model)
-        {
-            if (string.IsNullOrEmpty(model.Email))
-            {
-                return BadRequest(new { Message = "Email is required." });
-            }
-
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return NotFound(new { Message = "User not found." });
-            }
-
-            if (user.EmailConfirmed)
-            {
-                return BadRequest(new { Message = "This email is already confirmed." });
-            }
-
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token = token }, Request.Scheme);
-
-            await _emailSender.SendEmailAsync(user.Email, "Personal Web App Email Confirmation", $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Personal Web App</a>");
-
-            return Ok(new { Message = "Confirmation email sent. Please check your email." });
-        }
-
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
@@ -146,6 +117,13 @@ namespace PersonalWebApp.Controllers
             }
 
             return BadRequest(new { Message = "Error confirming email.", Errors = result.Errors });
+        }
+
+        private async void SendEmailConfirmation(User user)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token = token }, Request.Scheme);
+            await _emailSender.SendEmailAsync(user.Email, "Personal Web App Email Confirmation", $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Personal Web App</a>");
         }
     }
 
