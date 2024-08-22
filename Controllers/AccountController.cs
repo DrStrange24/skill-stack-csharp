@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PersonalWebApp.Services.Implementations;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Net;
+using System.Net.Mail;
+using Azure.Core;
 
 namespace PersonalWebApp.Controllers
 {
@@ -69,7 +73,7 @@ namespace PersonalWebApp.Controllers
             if (user == null) return Unauthorized("Invalid login attempt.");
 
             // Check if the email is confirmed
-            //if (!await _userManager.IsEmailConfirmedAsync(user)) return Unauthorized("You need to confirm your email before logging in.");
+            if (!await _userManager.IsEmailConfirmedAsync(user)) return Unauthorized("You need to confirm your email before logging in.");
 
             // Attempt to sign in the user
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
@@ -94,9 +98,9 @@ namespace PersonalWebApp.Controllers
         }
 
         [HttpPost("generate-email-confirmation")]
+        [Authorize]
         public async Task<IActionResult> GenerateEmailConfirmation([FromBody] EmailConfirmationRequestDTO model)
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             if (string.IsNullOrEmpty(model.Email))
             {
                 return BadRequest(new { Message = "Email is required." });
@@ -116,7 +120,7 @@ namespace PersonalWebApp.Controllers
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token = token }, Request.Scheme);
 
-            await _emailSender.SendEmailAsync(user.Email, "Confirm your email", $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>link</a>");
+            await _emailSender.SendEmailAsync(user.Email, "Personal Web App Email Confirmation", $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Personal Web App</a>");
 
             return Ok(new { Message = "Confirmation email sent. Please check your email." });
         }
@@ -124,7 +128,6 @@ namespace PersonalWebApp.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             {
                 return BadRequest(new { Message = "User ID and token are required." });
@@ -144,7 +147,6 @@ namespace PersonalWebApp.Controllers
 
             return BadRequest(new { Message = "Error confirming email.", Errors = result.Errors });
         }
-
     }
 
 }

@@ -11,15 +11,13 @@ namespace PersonalWebApp.Services.Implementations
 
         public EmailSender()
         {
-            // Configuration for the SMTP client
-            _smtpClient = new SmtpClient("smtp.gmail.com")  // Replace with your SMTP server
+            _fromEmail = "jbrynnbacuta@gmail.com";
+            _smtpClient = new SmtpClient("smtp.gmail.com")
             {
-                Port = 587,  // Typically, 587 for TLS
-                Credentials = new NetworkCredential("jbrynnbacuta@gmail.com", ""),  // Replace with your email credentials
-                EnableSsl = true
+                Port = 587,
+                Credentials = new NetworkCredential(_fromEmail, "lxwu mtre funu cadd"),
+                EnableSsl = true,
             };
-
-            _fromEmail = "jbrynnbacuta@gmail.com";  // The email address you want to send from
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -36,4 +34,5 @@ namespace PersonalWebApp.Services.Implementations
             await _smtpClient.SendMailAsync(mailMessage);
         }
     }
+
 }
