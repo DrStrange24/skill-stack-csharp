@@ -96,6 +96,7 @@ namespace PersonalWebApp.Controllers
         [HttpPost("generate-email-confirmation")]
         public async Task<IActionResult> GenerateEmailConfirmation([FromBody] EmailConfirmationRequestDTO model)
         {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             if (string.IsNullOrEmpty(model.Email))
             {
                 return BadRequest(new { Message = "Email is required." });
@@ -123,6 +124,7 @@ namespace PersonalWebApp.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             {
                 return BadRequest(new { Message = "User ID and token are required." });
