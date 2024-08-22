@@ -26,8 +26,8 @@ namespace PersonalWebApp.Controllers
         }
 
         // Get a user by Id
-        [HttpGet("{id:int}", Name = "GetUserById")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{id}", Name = "GetUserById")]
+        public async Task<IActionResult> GetById(string id)
         {
             var user = await _userService.GetUserByIdAsync(id);
 
@@ -44,7 +44,7 @@ namespace PersonalWebApp.Controllers
             if (user == null)
                 return BadRequest("User is null.");
 
-            await _userService.CreateUserAsync(user);
+            //await _userService.CreateUserAsync(user);
 
             //_logger.LogInformation($"Created user: {user.Name}, Price: {user.Price}");
 
@@ -52,8 +52,8 @@ namespace PersonalWebApp.Controllers
         }
 
         // Update an existing user
-        [HttpPut("{id:int}", Name = "UpdateUser")]
-        public async Task<IActionResult> Update(int id, [FromBody] User updatedUser)
+        [HttpPut("{id}", Name = "UpdateUser")]
+        public async Task<IActionResult> Update(string id, [FromBody] User updatedUser)
         {
             if (updatedUser == null)
                 return BadRequest("Updated user is null.");
@@ -73,8 +73,8 @@ namespace PersonalWebApp.Controllers
         }
 
         // Delete a user by Id
-        [HttpDelete("{id:int}", Name = "DeleteUser")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{id}", Name = "DeleteUser")]
+        public async Task<IActionResult> Delete(string id)
         {
             var user = await _userService.GetUserByIdAsync(id);
 
