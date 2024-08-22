@@ -73,7 +73,15 @@ namespace PersonalWebApp.Controllers
             if (result.Succeeded)
             {
                 var token = _jwtTokenService.GenerateToken(user);
-                return Ok(new { Token = token, Message = "Login successful" });
+                var userDTO = new UserDTO() { 
+                    Id = user.Id,
+                    Username = user.UserName,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    EmailConfirmed = user.EmailConfirmed,
+                };
+                return Ok(new { Token = token, Message = "Login successful", User = userDTO });
             }
 
             if (result.IsLockedOut) return Forbid("User account is locked out.");
