@@ -1,5 +1,5 @@
-using WebApp.Models;
-using WebApp.Services.Interfaces;
+using PersonalWebApp.Models;
+using PersonalWebApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers

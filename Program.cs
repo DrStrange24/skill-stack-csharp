@@ -1,13 +1,13 @@
-using WebApp.Repositories.Interfaces;
-using WebApp.Services.Implementations;
-using WebApp.Services.Interfaces;
+using PersonalWebApp.Repositories.Interfaces;
+using PersonalWebApp.Services.Implementations;
+using PersonalWebApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using WebApp.Models;
+using PersonalWebApp.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using PersonalWebApp.Services.Implementations;
+using PersonalWebApp.Repositories.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +54,8 @@ builder.Services.AddAuthentication(options =>
 // Register the repository and service
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<JwtTokenService>();
 

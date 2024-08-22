@@ -1,4 +1,4 @@
-﻿namespace WebApp.Models
+﻿namespace PersonalWebApp.Models
 {
     public class Product
     {

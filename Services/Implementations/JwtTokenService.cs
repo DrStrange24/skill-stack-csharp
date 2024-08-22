@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using WebApp.Models;
+using PersonalWebApp.Models;
 
 namespace PersonalWebApp.Services.Implementations
 {

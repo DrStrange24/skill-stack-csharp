@@ -1,7 +1,6 @@
-﻿using WebApp.Models;
-using WebApp.Repositories.Interfaces;
+﻿using PersonalWebApp.Models;
 
-namespace WebApp.Services.Interfaces
+namespace PersonalWebApp.Services.Interfaces
 {
     public interface IProductService
     {

@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
-namespace WebApp.Models
+namespace PersonalWebApp.Models
 {
     public class User: IdentityUser
     {

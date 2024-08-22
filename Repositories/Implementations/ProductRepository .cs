@@ -1,9 +1,8 @@
-﻿using WebApp.Models;
+﻿using PersonalWebApp.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using PersonalWebApp.Repositories.Interfaces;
 
-namespace WebApp.Repositories.Interfaces
+namespace PersonalWebApp.Repositories.Implementations
 {
     public class ProductRepository : IProductRepository
     {

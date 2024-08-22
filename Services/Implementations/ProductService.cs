@@ -1,10 +1,9 @@
-﻿using WebApp.Models;
-using WebApp.Repositories.Interfaces;
-using WebApp.Services.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using PersonalWebApp.Models;
+using PersonalWebApp.Repositories.Interfaces;
+using PersonalWebApp.Services.Interfaces;
 
-namespace WebApp.Services.Implementations
+
+namespace PersonalWebApp.Services.Implementations
 {
     public class ProductService : IProductService
     {

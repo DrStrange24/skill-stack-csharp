@@ -1,4 +1,4 @@
-﻿using WebApp.Models;
+﻿using PersonalWebApp.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

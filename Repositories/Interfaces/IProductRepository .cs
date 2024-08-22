@@ -1,8 +1,6 @@
-﻿using WebApp.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using PersonalWebApp.Models;
 
-namespace WebApp.Repositories.Interfaces
+namespace PersonalWebApp.Repositories.Interfaces
 {
     public interface IProductRepository
     {

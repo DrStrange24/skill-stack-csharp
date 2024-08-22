@@ -2,16 +2,14 @@
 
 namespace PersonalWebApp.DTOs
 {
-    public class LoginDTO
+    public class UserDTO
     {
         [Required]
-        public string UsernameOrEmail { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public bool RememberMe { get; set; }
     }
-
 }

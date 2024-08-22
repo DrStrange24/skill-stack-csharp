@@ -1,10 +1,10 @@
-﻿using WebApp.DTOs;
-using WebApp.Models;
+﻿using PersonalWebApp.DTOs;
+using PersonalWebApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PersonalWebApp.Services.Implementations;
 
-namespace WebApp.Controllers
+namespace PersonalWebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
