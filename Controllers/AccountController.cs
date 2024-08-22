@@ -69,7 +69,7 @@ namespace PersonalWebApp.Controllers
             if (user == null) return Unauthorized("Invalid login attempt.");
 
             // Check if the email is confirmed
-            if (!await _userManager.IsEmailConfirmedAsync(user)) return Unauthorized("You need to confirm your email before logging in.");
+            //if (!await _userManager.IsEmailConfirmedAsync(user)) return Unauthorized("You need to confirm your email before logging in.");
 
             // Attempt to sign in the user
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
