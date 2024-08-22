@@ -79,7 +79,6 @@ namespace PersonalWebApp.Controllers
         [HttpDelete("{id}", Name = "DeleteUser")]
         public async Task<IActionResult> Delete(string id)
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             var user = await _userService.GetUserByIdAsync(id);
 
             if (user == null)

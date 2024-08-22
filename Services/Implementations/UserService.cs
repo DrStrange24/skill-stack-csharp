@@ -58,10 +58,11 @@ namespace PersonalWebApp.Services.Implementations
             //await _userRepository.SaveChangesAsync(); // Save changes to the database
         }
 
-        public async Task DeleteUserAsync(UserDTO user)
+        public async Task DeleteUserAsync(UserDTO userDTO)
         {
-            //_userRepository.RemoveUser(user);
-            //await _userRepository.SaveChangesAsync(); // Save changes to the database
+            var user = await _userRepository.GetUserByIdAsync(userDTO.Id);
+            _userRepository.RemoveUser(user);
+            await _userRepository.SaveChangesAsync(); // Save changes to the database
         }
     }
 }
