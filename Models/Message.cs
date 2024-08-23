@@ -6,7 +6,7 @@ namespace PersonalWebApp.Models
     public class Message
     {
         [Key]
-        public Guid MessageId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string SenderId { get; set; }
