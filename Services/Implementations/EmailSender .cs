@@ -15,7 +15,7 @@ namespace PersonalWebApp.Services.Implementations
             _smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
-                Credentials = new NetworkCredential(_fromEmail, "lxwu mtre funu cadd"),
+                Credentials = new NetworkCredential(_fromEmail, ""),
                 EnableSsl = true,
             };
         }
