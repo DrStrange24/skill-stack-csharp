@@ -173,7 +173,7 @@ namespace PersonalWebApp.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("PersonalWebApp.Models.Product", b =>
@@ -191,7 +191,7 @@ namespace PersonalWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("PersonalWebApp.Models.User", b =>
