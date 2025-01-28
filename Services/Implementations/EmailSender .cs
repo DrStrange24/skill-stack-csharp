@@ -15,6 +15,7 @@ namespace PersonalWebApp.Services.Implementations
             _smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
+                //google account 'app password'
                 Credentials = new NetworkCredential(_fromEmail, "fqyq ujnf whjz sgdw"),
                 EnableSsl = true,
             };
