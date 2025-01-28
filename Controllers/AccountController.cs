@@ -36,7 +36,8 @@ namespace PersonalWebApp.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] SignupDTO model)
         {
-            if (ModelState.IsValid)return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            
             var user = new User
             {
                 UserName = model.Username,
