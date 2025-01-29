@@ -178,9 +178,8 @@ namespace PersonalWebApp.Migrations
 
             modelBuilder.Entity("PersonalWebApp.Models.Product", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()

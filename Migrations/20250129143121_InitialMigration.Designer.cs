@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PersonalWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240823134310_UpdateMessageDefaultDate")]
-    partial class UpdateMessageDefaultDate
+    [Migration("20250129143121_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,9 +181,8 @@ namespace PersonalWebApp.Migrations
 
             modelBuilder.Entity("PersonalWebApp.Models.Product", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
