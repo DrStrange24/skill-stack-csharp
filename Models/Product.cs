@@ -2,7 +2,7 @@
 {
     public class Product
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; }
         public decimal Price { get; set; }
     }

@@ -18,7 +18,7 @@ namespace PersonalWebApp.Repositories.Implementations
             return await _context.Products.ToListAsync();
         }
 
-        public async Task<Product> GetProductByIdAsync(int id)
+        public async Task<Product> GetProductByIdAsync(string id)
         {
             return await _context.Products.FindAsync(id);
         }

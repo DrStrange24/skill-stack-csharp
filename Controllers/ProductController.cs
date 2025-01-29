@@ -2,6 +2,7 @@ using PersonalWebApp.Models;
 using PersonalWebApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using PersonalWebApp.DTOs.ProductDTOs;
 
 namespace WebApp.Controllers
 {
@@ -28,8 +29,8 @@ namespace WebApp.Controllers
         }
 
         // Get a product by Id
-        [HttpGet("{id:int}", Name = "GetProductById")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{id}", Name = "GetProductById")]
+        public async Task<IActionResult> GetById(string id)
         {
             var product = await _productService.GetProductDetailsAsync(id);
 
@@ -41,21 +42,27 @@ namespace WebApp.Controllers
 
         // Create a new product (already provided but updated to async)
         [HttpPost(Name = "PostProduct")]
-        public async Task<IActionResult> Post([FromBody] Product product)
+        public async Task<IActionResult> Post([FromBody] CreateProductDTO productDTO)
         {
-            if (product == null)
+            if (productDTO == null)
                 return BadRequest("Product is null.");
+
+            var product = new Product
+            {
+                Name = productDTO.Name,
+                Price = productDTO.Price,
+            };
 
             await _productService.CreateProductAsync(product);
 
-            _logger.LogInformation($"Created product: {product.Name}, Price: {product.Price}");
+            _logger.LogInformation($"Created product: {productDTO.Name}, Price: {productDTO.Price}");
 
-            return CreatedAtRoute("GetProductById", new { id = product.Id }, product);
+            return CreatedAtRoute("GetProductById", new { id = product.Id }, productDTO);
         }
 
         // Update an existing product
-        [HttpPut("{id:int}", Name = "UpdateProduct")]
-        public async Task<IActionResult> Update(int id, [FromBody] Product updatedProduct)
+        [HttpPut("{id}", Name = "UpdateProduct")]
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateProductDTO updatedProduct)
         {
             if (updatedProduct == null)
                 return BadRequest("Updated product is null.");
@@ -75,8 +82,8 @@ namespace WebApp.Controllers
         }
 
         // Delete a product by Id
-        [HttpDelete("{id:int}", Name = "DeleteProduct")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{id}", Name = "DeleteProduct")]
+        public async Task<IActionResult> Delete(string id)
         {
             var product = await _productService.GetProductDetailsAsync(id);
 

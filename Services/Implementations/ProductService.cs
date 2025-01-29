@@ -19,7 +19,7 @@ namespace PersonalWebApp.Services.Implementations
             return await _productRepository.GetAllProductsAsync();
         }
 
-        public async Task<Product> GetProductDetailsAsync(int id)
+        public async Task<Product> GetProductDetailsAsync(string id)
         {
             return await _productRepository.GetProductByIdAsync(id);
         }
