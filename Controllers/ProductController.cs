@@ -57,7 +57,7 @@ namespace WebApp.Controllers
 
             _logger.LogInformation($"Created product: {productDTO.Name}, Price: {productDTO.Price}");
 
-            return CreatedAtRoute("GetProductById", new { id = product.Id }, productDTO);
+            return CreatedAtRoute("GetProductById", new { id = product.Id }, product);
         }
 
         // Update an existing product
