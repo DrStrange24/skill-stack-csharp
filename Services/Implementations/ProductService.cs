@@ -1,9 +1,9 @@
-﻿using PersonalWebApp.Models;
-using PersonalWebApp.Repositories.Interfaces;
-using PersonalWebApp.Services.Interfaces;
+﻿using SkillStackCSharp.Models;
+using SkillStackCSharp.Repositories.Interfaces;
+using SkillStackCSharp.Services.Interfaces;
 
 
-namespace PersonalWebApp.Services.Implementations
+namespace SkillStackCSharp.Services.Implementations
 {
     public class ProductService : IProductService
     {

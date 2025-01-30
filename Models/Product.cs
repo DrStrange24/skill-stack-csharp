@@ -1,4 +1,4 @@
-﻿namespace PersonalWebApp.Models
+﻿namespace SkillStackCSharp.Models
 {
     public class Product
     {

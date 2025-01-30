@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PersonalWebApp.Models;
-using PersonalWebApp.Repositories.Implementations;
-using PersonalWebApp.Repositories.Interfaces;
-using PersonalWebApp.Services.Implementations;
-using PersonalWebApp.Services.Interfaces;
+using SkillStackCSharp.Models;
+using SkillStackCSharp.Repositories.Implementations;
+using SkillStackCSharp.Repositories.Interfaces;
+using SkillStackCSharp.Services.Implementations;
+using SkillStackCSharp.Services.Interfaces;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

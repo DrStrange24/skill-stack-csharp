@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
-namespace PersonalWebApp.DTOs
+namespace SkillStackCSharp.DTOs
 {
     public class UserDTO
     {

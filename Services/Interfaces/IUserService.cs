@@ -1,7 +1,7 @@
-﻿using PersonalWebApp.DTOs;
-using PersonalWebApp.Models;
+﻿using SkillStackCSharp.DTOs;
+using SkillStackCSharp.Models;
 
-namespace PersonalWebApp.Services.Interfaces
+namespace SkillStackCSharp.Services.Interfaces
 {
     public interface IUserService
     {

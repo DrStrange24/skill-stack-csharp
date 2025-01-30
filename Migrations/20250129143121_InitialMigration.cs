@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace PersonalWebApp.Migrations
+namespace SkillStackCSharp.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

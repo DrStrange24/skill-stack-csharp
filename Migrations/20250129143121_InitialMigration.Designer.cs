@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace PersonalWebApp.Migrations
+namespace SkillStackCSharp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20250129143121_InitialMigration")]
@@ -149,7 +149,7 @@ namespace PersonalWebApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PersonalWebApp.Models.Message", b =>
+            modelBuilder.Entity("SkillStackCSharp.Models.Message", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,7 +179,7 @@ namespace PersonalWebApp.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("PersonalWebApp.Models.Product", b =>
+            modelBuilder.Entity("SkillStackCSharp.Models.Product", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -196,7 +196,7 @@ namespace PersonalWebApp.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("PersonalWebApp.Models.User", b =>
+            modelBuilder.Entity("SkillStackCSharp.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -279,7 +279,7 @@ namespace PersonalWebApp.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("PersonalWebApp.Models.User", null)
+                    b.HasOne("SkillStackCSharp.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -288,7 +288,7 @@ namespace PersonalWebApp.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("PersonalWebApp.Models.User", null)
+                    b.HasOne("SkillStackCSharp.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -303,7 +303,7 @@ namespace PersonalWebApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PersonalWebApp.Models.User", null)
+                    b.HasOne("SkillStackCSharp.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -312,22 +312,22 @@ namespace PersonalWebApp.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("PersonalWebApp.Models.User", null)
+                    b.HasOne("SkillStackCSharp.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PersonalWebApp.Models.Message", b =>
+            modelBuilder.Entity("SkillStackCSharp.Models.Message", b =>
                 {
-                    b.HasOne("PersonalWebApp.Models.User", "Receiver")
+                    b.HasOne("SkillStackCSharp.Models.User", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PersonalWebApp.Models.User", "Sender")
+                    b.HasOne("SkillStackCSharp.Models.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
