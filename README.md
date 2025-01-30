@@ -1,20 +1,15 @@
-# backend
+# skill-stack-csharp
 
-Cheat Sheet:
-	dotnet ef migrations add [migration title]
-	dotnet ef database update
-	dotnet ef migrations list
+*This project is to showcase skill in C# ASP.Net Core* 
+*Basic CRUD operations* 
+*Authentication* 
+*Email Confirmation*
 
-Account Registration 
-{
-  "username": "user1",
-  "email": "user1@gmail.com",
-  "password": "Password!1",
-  "firstName": "fn1",
-  "lastName": "ln1"
-}
 
-{
-  "usernameOrEmail": "user1",
-  "password": "Password!1"
-}
+## Setup and Installation
+
+Provide the steps for setting up the project locally. Example:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/DrStrange24/skill-stack-csharp.git
