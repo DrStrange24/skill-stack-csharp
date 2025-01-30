@@ -100,24 +100,25 @@ namespace SkillStackCSharp.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
+            var baseURL = "http://localhost:3000";
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             {
-                return BadRequest(new { Message = "User ID and token are required." });
+                return Redirect($"{baseURL}/login?status=failure&message=User%20ID%20and%20token%20are%20required.");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return NotFound(new { Message = $"Unable to find user with ID '{userId}'." });
+                return Redirect($"{baseURL}/login?status=failure&message=Unable%20to%20find%20user%20with%20ID%20'{userId}'.");
             }
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
-                return Ok(new { Message = "Email confirmed successfully!" });
+                return Redirect($"{baseURL}/login?status=success&message=Email%20confirmed%20successfully!");
             }
 
-            return BadRequest(new { Message = "Error confirming email.", Errors = result.Errors });
+            return Redirect($"{baseURL}/login?status=failure&message=Error%20confirming%20email.");
         }
 
         private async void SendEmailConfirmation(User user)
