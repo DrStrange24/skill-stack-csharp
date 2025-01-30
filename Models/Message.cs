@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace PersonalWebApp.Models
+namespace SkillStackCSharp.Models
 {
     public class Message
     {

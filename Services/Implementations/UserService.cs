@@ -1,10 +1,10 @@
-﻿using PersonalWebApp.Services.Interfaces;
-using PersonalWebApp.Models;
-using PersonalWebApp.Repositories.Interfaces;
-using PersonalWebApp.DTOs;
+﻿using SkillStackCSharp.Services.Interfaces;
+using SkillStackCSharp.Models;
+using SkillStackCSharp.Repositories.Interfaces;
+using SkillStackCSharp.DTOs;
 using System.Collections.Generic;
 
-namespace PersonalWebApp.Services.Implementations
+namespace SkillStackCSharp.Services.Implementations
 {
     public class UserService: IUserService
     {

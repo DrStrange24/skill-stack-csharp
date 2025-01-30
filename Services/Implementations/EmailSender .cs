@@ -2,7 +2,7 @@
 using System.Net.Mail;
 using System.Net;
 
-namespace PersonalWebApp.Services.Implementations
+namespace SkillStackCSharp.Services.Implementations
 {
     public class EmailSender : IEmailSender
     {

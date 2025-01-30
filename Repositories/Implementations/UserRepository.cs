@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PersonalWebApp.Repositories.Interfaces;
-using PersonalWebApp.Models;
+using SkillStackCSharp.Repositories.Interfaces;
+using SkillStackCSharp.Models;
 
-namespace PersonalWebApp.Repositories.Implementations
+namespace SkillStackCSharp.Repositories.Implementations
 {
     public class UserRepository : IUserRepository
     {

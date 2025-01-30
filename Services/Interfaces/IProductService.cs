@@ -1,6 +1,6 @@
-﻿using PersonalWebApp.Models;
+﻿using SkillStackCSharp.Models;
 
-namespace PersonalWebApp.Services.Interfaces
+namespace SkillStackCSharp.Services.Interfaces
 {
     public interface IProductService
     {

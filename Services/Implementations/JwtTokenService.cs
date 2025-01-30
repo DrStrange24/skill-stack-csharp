@@ -2,9 +2,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using PersonalWebApp.Models;
+using SkillStackCSharp.Models;
 
-namespace PersonalWebApp.Services.Implementations
+namespace SkillStackCSharp.Services.Implementations
 {
     public class JwtTokenService
     {

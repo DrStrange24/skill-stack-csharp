@@ -1,4 +1,4 @@
-﻿namespace PersonalWebApp.DTOs
+﻿namespace SkillStackCSharp.DTOs
 {
     public class EmailConfirmationRequestDTO
     {

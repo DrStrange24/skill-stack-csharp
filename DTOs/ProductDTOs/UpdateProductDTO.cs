@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PersonalWebApp.DTOs.ProductDTOs
+namespace SkillStackCSharp.DTOs.ProductDTOs
 {
     public class UpdateProductDTO
     {

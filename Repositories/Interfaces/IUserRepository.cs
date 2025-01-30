@@ -1,6 +1,6 @@
-﻿using PersonalWebApp.Models;
+﻿using SkillStackCSharp.Models;
 
-namespace PersonalWebApp.Repositories.Interfaces
+namespace SkillStackCSharp.Repositories.Interfaces
 {
     public interface IUserRepository
     {

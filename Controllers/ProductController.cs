@@ -1,8 +1,8 @@
-using PersonalWebApp.Models;
-using PersonalWebApp.Services.Interfaces;
+using SkillStackCSharp.Models;
+using SkillStackCSharp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using PersonalWebApp.DTOs.ProductDTOs;
+using SkillStackCSharp.DTOs.ProductDTOs;
 
 namespace WebApp.Controllers
 {

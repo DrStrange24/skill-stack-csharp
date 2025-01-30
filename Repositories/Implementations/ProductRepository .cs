@@ -1,8 +1,8 @@
-﻿using PersonalWebApp.Models;
+﻿using SkillStackCSharp.Models;
 using Microsoft.EntityFrameworkCore;
-using PersonalWebApp.Repositories.Interfaces;
+using SkillStackCSharp.Repositories.Interfaces;
 
-namespace PersonalWebApp.Repositories.Implementations
+namespace SkillStackCSharp.Repositories.Implementations
 {
     public class ProductRepository : IProductRepository
     {
