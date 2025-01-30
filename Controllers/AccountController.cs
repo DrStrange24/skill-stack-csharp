@@ -123,8 +123,19 @@ namespace SkillStackCSharp.Controllers
         private async void SendEmailConfirmation(User user)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token = token }, Request.Scheme);
-            await _emailSender.SendEmailAsync(user.Email, "Personal Web App Email Confirmation", $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Personal Web App</a>");
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token }, Request.Scheme);
+            var subject = "SkillStackCSharp Email Confirmation";
+            string message = $@"
+                <html>
+                    <body>
+                        <p>Hello {user.FirstName},</p>
+                        <p>Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a></p>
+                        <p>Thank you for signing up!</p>
+                        <p>Regards,</p>
+                        <p>SkillStackCSharp</p>
+                    </body>
+                </html>";
+            await _emailSender.SendEmailAsync(user.Email, subject, message);
         }
     }
 
