@@ -8,15 +8,16 @@ namespace PersonalWebApp.Services.Implementations
     {
         private readonly SmtpClient _smtpClient;
         private readonly string _fromEmail;
+        private readonly IConfiguration _configuration;
 
-        public EmailSender()
+        public EmailSender(IConfiguration configuration)
         {
-            _fromEmail = "jbrynnbacuta@gmail.com";
-            _smtpClient = new SmtpClient("smtp.gmail.com")
+            _configuration = configuration;
+            _fromEmail = _configuration["EmailSender:FromEmail"];
+            _smtpClient = new SmtpClient(_configuration["EmailSender:STMPClient"])
             {
                 Port = 587,
-                //google account 'app password'
-                Credentials = new NetworkCredential(_fromEmail, "fqyq ujnf whjz sgdw"),
+                Credentials = new NetworkCredential(_fromEmail, _configuration["EmailSender:Password"]),
                 EnableSsl = true,
             };
         }
