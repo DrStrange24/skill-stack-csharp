@@ -1,8 +1,11 @@
 # skill-stack-csharp
 
-*This project is to showcase skill in C# ASP.Net Core* 
-*Basic CRUD operations* 
-*Authentication* 
+*This project is to showcase skill in C# ASP.Net Core*
+
+*Basic CRUD operations*
+
+*Authentication*
+
 *Email Confirmation*
 
 

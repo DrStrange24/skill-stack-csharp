@@ -100,31 +100,43 @@ namespace SkillStackCSharp.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
+            var baseURL = "http://localhost:3000";
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             {
-                return BadRequest(new { Message = "User ID and token are required." });
+                return Redirect($"{baseURL}/login?status=failure&message=User%20ID%20and%20token%20are%20required.");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return NotFound(new { Message = $"Unable to find user with ID '{userId}'." });
+                return Redirect($"{baseURL}/login?status=failure&message=Unable%20to%20find%20user%20with%20ID%20'{userId}'.");
             }
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
-                return Ok(new { Message = "Email confirmed successfully!" });
+                return Redirect($"{baseURL}/login?status=success&message=Email%20confirmed%20successfully!");
             }
 
-            return BadRequest(new { Message = "Error confirming email.", Errors = result.Errors });
+            return Redirect($"{baseURL}/login?status=failure&message=Error%20confirming%20email.");
         }
 
         private async void SendEmailConfirmation(User user)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token = token }, Request.Scheme);
-            await _emailSender.SendEmailAsync(user.Email, "Personal Web App Email Confirmation", $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Personal Web App</a>");
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token }, Request.Scheme);
+            var subject = "SkillStackCSharp Email Confirmation";
+            string message = $@"
+                <html>
+                    <body>
+                        <p>Hello {user.FirstName},</p>
+                        <p>Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a></p>
+                        <p>Thank you for signing up!</p>
+                        <p>Regards,</p>
+                        <p>SkillStackCSharp</p>
+                    </body>
+                </html>";
+            await _emailSender.SendEmailAsync(user.Email, subject, message);
         }
     }
 
