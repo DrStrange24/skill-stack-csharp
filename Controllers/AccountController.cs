@@ -103,31 +103,32 @@ namespace SkillStackCSharp.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            var baseURL = _configuration["AppSettings:BaseUrl"];
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             {
-                return Redirect($"{baseURL}/login?status=failure&message=User%20ID%20and%20token%20are%20required.");
+                return BadRequest(new { Message = "User ID and token are required." });
             }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return Redirect($"{baseURL}/login?status=failure&message=Unable%20to%20find%20user%20with%20ID%20'{userId}'.");
+                return NotFound(new { Message = $"Unable to find user with ID '{userId}'." });
             }
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
+
             if (result.Succeeded)
             {
-                return Redirect($"{baseURL}/login?status=success&message=Email%20confirmed%20successfully!");
+                return Ok(new { Message = "Email confirmed successfully!" });
             }
 
-            return Redirect($"{baseURL}/login?status=failure&message=Error%20confirming%20email.");
+            return BadRequest(new { Message = "Error confirming email.", result.Errors });
         }
 
         private async void SendEmailConfirmation(User user)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token }, Request.Scheme);
+            var baseURL = _configuration["AppSettings:BaseUrl"];
+            var confirmationLink = $"{baseURL}/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}";
             var subject = "SkillStackCSharp Email Confirmation";
             string message = $@"
                 <html>
