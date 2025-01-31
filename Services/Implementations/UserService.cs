@@ -18,14 +18,19 @@ namespace SkillStackCSharp.Services.Implementations
         public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            foreach (var user in users)
-            {
-                
-            }
-            //var userDTO = new UserDTO() { 
 
-            //};
-            return null;
+            // Map User entities to UserDTO
+            var userDto = users.Select(user => new UserDTO
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName =  user.LastName,
+                EmailConfirmed = user.EmailConfirmed
+            });
+
+            return userDto;
         }
 
         public async Task<UserDTO> GetUserByIdAsync(string id)
