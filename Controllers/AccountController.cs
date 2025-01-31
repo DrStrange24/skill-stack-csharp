@@ -19,18 +19,21 @@ namespace SkillStackCSharp.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly JwtTokenService _jwtTokenService;
         private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration;
 
         public AccountController(
             UserManager<User> userManager, 
             SignInManager<User> signInManager,
             JwtTokenService jwtTokenService,
-            IEmailSender emailSender
+            IEmailSender emailSender,
+            IConfiguration configuration
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtTokenService = jwtTokenService;
             _emailSender = emailSender;
+            _configuration = configuration;
         }
 
         [HttpPost("signup")]
@@ -100,7 +103,7 @@ namespace SkillStackCSharp.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            var baseURL = "http://localhost:3000";
+            var baseURL = _configuration["AppSettings:BaseUrl"];
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             {
                 return Redirect($"{baseURL}/login?status=failure&message=User%20ID%20and%20token%20are%20required.");
