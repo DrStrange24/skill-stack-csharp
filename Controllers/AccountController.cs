@@ -4,10 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SkillStackCSharp.Services.Implementations;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Authorization;
-using System.Net;
-using System.Net.Mail;
-using Azure.Core;
 
 namespace SkillStackCSharp.Controllers
 {
