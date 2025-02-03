@@ -89,7 +89,7 @@ namespace SkillStackCSharp.Controllers
                     LastName = user.LastName,
                     EmailConfirmed = user.EmailConfirmed,
                 };
-                return Ok(new { Token = token, Message = "Login successful", User = userDTO });
+                return Ok(new { Token = token.Result, Message = "Login successful", User = userDTO });
             }
 
             if (result.IsLockedOut) return Forbid("User account is locked out.");
