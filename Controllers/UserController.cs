@@ -3,6 +3,7 @@ using SkillStackCSharp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using SkillStackCSharp.Constants;
+using System.Security.Claims;
 
 namespace SkillStackCSharp.Controllers
 {
@@ -28,16 +29,23 @@ namespace SkillStackCSharp.Controllers
             return Ok(users);
         }
 
-        // Get a user by Id
         [HttpGet("{id}", Name = "GetUserById")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetUserById(string id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (user == null)
-                return NotFound($"User with Id = {id} not found.");
+            // Admin can access all or by the current user
+            if (User.IsInRole(UserRoles.Admin) || userId == id)
+            {
+                var user = await _userService.GetUserByIdAsync(id);
 
-            return Ok(user);
+                if (user == null)
+                    return NotFound($"User with Id = {id} not found.");
+
+                return Ok(user);
+            }
+
+            return Forbid("You can only access your own data.");
         }
 
         // Create a new user (already provided but updated to async)
