@@ -1,5 +1,5 @@
-﻿using SkillStackCSharp.DTOs;
-using SkillStackCSharp.Models;
+﻿using DTOs.UserDTOs.CreateUserDTO;
+using DTOs.UserDTOs.UserDTO;
 
 namespace SkillStackCSharp.Services.Interfaces
 {
@@ -7,7 +7,7 @@ namespace SkillStackCSharp.Services.Interfaces
     {
         Task<IEnumerable<UserDTO>> GetAllUsersAsync();
         Task<UserDTO> GetUserByIdAsync(string id);
-        Task CreateUserAsync(UserDTO user);
+        Task<UserDTO> CreateUserAsync(CreateUserDTO user);
         Task UpdateUserAsync(UserDTO user);
         Task DeleteUserAsync(UserDTO user);
     }

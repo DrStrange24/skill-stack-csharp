@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using SkillStackCSharp.Constants;
 using System.Security.Claims;
+using DTOs.UserDTOs.CreateUserDTO;
 
 namespace SkillStackCSharp.Controllers
 {
@@ -48,17 +49,16 @@ namespace SkillStackCSharp.Controllers
             return Forbid("You can only access your own data.");
         }
 
-        // Create a new user (already provided but updated to async)
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost(Name = "PostUser")]
-        public async Task<IActionResult> Post([FromBody] User user)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO userDto)
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
-            if (user == null)
+            if (userDto == null)
                 return BadRequest("User is null.");
 
-            //await _userService.CreateUserAsync(user);
+            var user = await _userService.CreateUserAsync(userDto);
 
-            //_logger.LogInformation($"Created user: {user.Name}, Price: {user.Price}");
+            _logger.LogInformation($"Created user: {user.UserName}, Email: {user.Email}");
 
             return CreatedAtRoute("GetUserById", new { id = user.Id }, user);
         }

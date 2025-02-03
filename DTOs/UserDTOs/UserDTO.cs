@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 
-namespace SkillStackCSharp.DTOs
+namespace DTOs.UserDTOs.UserDTO
 {
     public class UserDTO
     {
@@ -10,7 +9,7 @@ namespace SkillStackCSharp.DTOs
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public bool EmailConfirmed { get; set; }
 
     }

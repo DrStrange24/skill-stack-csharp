@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SkillStackCSharp.Services.Implementations;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using DTOs.UserDTOs.UserDTO;
 
 namespace SkillStackCSharp.Controllers
 {
@@ -82,7 +83,7 @@ namespace SkillStackCSharp.Controllers
                 var token = _jwtTokenService.GenerateToken(user);
                 var userDTO = new UserDTO() { 
                     Id = user.Id,
-                    Username = user.UserName,
+                    UserName = user.UserName,
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
