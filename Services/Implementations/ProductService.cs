@@ -30,6 +30,10 @@ namespace SkillStackCSharp.Services.Implementations
         public async Task<ProductDTO> GetProductDetailsAsync(string id)
         {
             var product = await _productRepository.GetProductByIdAsync(id);
+
+            if (product == null)
+                return null;
+
             var productDTO = new ProductDTO
             {
                 Id = product.Id,
