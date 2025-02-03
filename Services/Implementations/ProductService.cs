@@ -1,4 +1,5 @@
-﻿using SkillStackCSharp.Models;
+﻿using SkillStackCSharp.DTOs.ProductDTOs;
+using SkillStackCSharp.Models;
 using SkillStackCSharp.Repositories.Interfaces;
 using SkillStackCSharp.Services.Interfaces;
 
@@ -27,19 +28,30 @@ namespace SkillStackCSharp.Services.Implementations
         public async Task CreateProductAsync(Product product)
         {
             _productRepository.AddProduct(product);
-            await _productRepository.SaveChangesAsync(); // Save changes to the database
+            await _productRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateProductAsync(Product product)
+        public async Task<Product> UpdateProductAsync(string id, UpdateProductDTO updatedProduct)
         {
+            var product = await GetProductDetailsAsync(id);
+
+            if (product == null)
+                return null;
+
+            // Update the product properties
+            product.Name = updatedProduct.Name;
+            product.Price = updatedProduct.Price;
+
             _productRepository.UpdateProduct(product);
-            await _productRepository.SaveChangesAsync(); // Save changes to the database
+            await _productRepository.SaveChangesAsync();
+
+            return product;
         }
 
         public async Task DeleteProductAsync(Product product)
         {
             _productRepository.RemoveProduct(product);
-            await _productRepository.SaveChangesAsync(); // Save changes to the database
+            await _productRepository.SaveChangesAsync();
         }
     }
 }

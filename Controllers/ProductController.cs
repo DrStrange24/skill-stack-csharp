@@ -67,18 +67,12 @@ namespace WebApp.Controllers
             if (updatedProduct == null)
                 return BadRequest("Updated product is null.");
 
-            var product = await _productService.GetProductDetailsAsync(id);
+            var result = await _productService.UpdateProductAsync(id,updatedProduct);
 
-            if (product == null)
+            if (result == null)
                 return NotFound($"Product with Id = {id} not found.");
 
-            // Update the product properties
-            product.Name = updatedProduct.Name;
-            product.Price = updatedProduct.Price;
-
-            await _productService.UpdateProductAsync(product);
-
-            return Ok(product);
+            return Ok(result);
         }
 
         // Delete a product by Id

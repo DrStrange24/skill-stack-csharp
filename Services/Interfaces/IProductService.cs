@@ -1,4 +1,5 @@
-﻿using SkillStackCSharp.Models;
+﻿using SkillStackCSharp.DTOs.ProductDTOs;
+using SkillStackCSharp.Models;
 
 namespace SkillStackCSharp.Services.Interfaces
 {
@@ -7,7 +8,7 @@ namespace SkillStackCSharp.Services.Interfaces
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductDetailsAsync(string id);
         Task CreateProductAsync(Product product);
-        Task UpdateProductAsync(Product product);
+        Task<Product> UpdateProductAsync(string id, UpdateProductDTO product);
         Task DeleteProductAsync(Product product);
     }
 }
