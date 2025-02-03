@@ -85,17 +85,17 @@ namespace SkillStackCSharp.Controllers
             return Ok(user);
         }
 
-        // Delete a user by Id
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}", Name = "DeleteUser")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> DeleteUserById(string id)
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
-            var user = await _userService.GetUserByIdAsync(id);
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("User ID cannot be null or empty.");
 
-            if (user == null)
+            var result = await _userService.DeleteUserAsync(id);
+
+            if (!result)
                 return NotFound($"User with Id = {id} not found.");
-
-            await _userService.DeleteUserAsync(user);
 
             _logger.LogInformation($"Deleted user with Id = {id}");
 

@@ -8,6 +8,6 @@ namespace SkillStackCSharp.Services.Interfaces
         Task<UserDTO> GetUserByIdAsync(string id);
         Task<UserDTO> CreateUserAsync(CreateUserDTO user);
         Task UpdateUserAsync(UserDTO user);
-        Task DeleteUserAsync(UserDTO user);
+        Task<bool> DeleteUserAsync(string id);
     }
 }

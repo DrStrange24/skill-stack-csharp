@@ -96,11 +96,17 @@ namespace SkillStackCSharp.Services.Implementations
             //await _userRepository.SaveChangesAsync(); // Save changes to the database
         }
 
-        public async Task DeleteUserAsync(UserDTO userDTO)
+        public async Task<bool> DeleteUserAsync(string id)
         {
-            var user = await _userRepository.GetUserByIdAsync(userDTO.Id);
+            var user = await _userRepository.GetUserByIdAsync(id);
+
+            if (user == null)
+                return false;
+
             _userRepository.RemoveUser(user);
             await _userRepository.SaveChangesAsync(); // Save changes to the database
+
+            return true;
         }
     }
 }
