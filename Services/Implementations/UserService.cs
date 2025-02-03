@@ -1,8 +1,6 @@
 ﻿using SkillStackCSharp.Services.Interfaces;
-using SkillStackCSharp.Models;
 using SkillStackCSharp.Repositories.Interfaces;
 using SkillStackCSharp.DTOs;
-using System.Collections.Generic;
 
 namespace SkillStackCSharp.Services.Implementations
 {

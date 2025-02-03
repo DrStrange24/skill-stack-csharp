@@ -19,11 +19,10 @@ namespace SkillStackCSharp.Controllers
             _userService = userService;
         }
 
-        // Get all users
+        [Authorize(Roles = "Admin")]
         [HttpGet(Name = "GetUsers")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllUsers()
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
