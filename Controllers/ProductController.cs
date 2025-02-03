@@ -73,8 +73,8 @@ namespace WebApp.Controllers
         [HttpDelete("{id}", Name = "DeleteProduct")]
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
-                return NotFound($"Id is Empty");
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("Product ID cannot be null or empty.");
 
             var result = await _productService.DeleteProductAsync(id);
 
