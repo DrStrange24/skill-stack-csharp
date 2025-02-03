@@ -76,7 +76,10 @@ namespace WebApp.Controllers
             if (id == null)
                 return NotFound($"Id is Empty");
 
-            await _productService.DeleteProductAsync(id);
+            var result = await _productService.DeleteProductAsync(id);
+
+            if (!result)
+                return NotFound($"Product with Id = {id} not found.");
 
             _logger.LogInformation($"Deleted product with Id = {id}");
 

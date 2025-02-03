@@ -9,6 +9,6 @@ namespace SkillStackCSharp.Services.Interfaces
         Task<ProductDTO> GetProductDetailsAsync(string id);
         Task<ProductDTO> CreateProductAsync(CreateProductDTO product);
         Task<ProductDTO> UpdateProductAsync(string id, UpdateProductDTO product);
-        Task DeleteProductAsync(string id);
+        Task<bool> DeleteProductAsync(string id);
     }
 }

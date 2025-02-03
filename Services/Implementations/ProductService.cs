@@ -88,13 +88,17 @@ namespace SkillStackCSharp.Services.Implementations
             return productDTO;
         }
 
-        public async Task DeleteProductAsync(string id)
+        public async Task<bool> DeleteProductAsync(string id)
         {
             var product = await _productRepository.GetProductByIdAsync(id);
+
             if (product == null)
-                return;
+                return false;
+
             _productRepository.RemoveProduct(product);
             await _productRepository.SaveChangesAsync();
+
+            return true;
         }
     }
 }
