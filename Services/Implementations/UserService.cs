@@ -103,30 +103,6 @@ namespace SkillStackCSharp.Services.Implementations
             user.UserName = updateUserDTO.UserName;
             user.Email = updateUserDTO.Email;
 
-            // Handle password update if provided
-            if (!string.IsNullOrWhiteSpace(updateUserDTO.Password))
-            {
-                var passwordHasher = new PasswordHasher<User>();
-                user.PasswordHash = passwordHasher.HashPassword(user, updateUserDTO.Password);
-            }
-
-            // to do: Update roles
-            //if (updateUserDTO.Role != null && updateUserDTO.Role.Any())
-            //{
-            //    // Remove existing roles
-            //    var currentRoles = await _userManager.GetRolesAsync(user);
-            //    var rolesToRemove = currentRoles.Except(updateUserDTO.Role).ToList();
-            //    var rolesToAdd = updateUserDTO.Roles.Except(currentRoles).ToList();
-
-            //    // Remove roles
-            //    if (rolesToRemove.Any())
-            //        await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
-
-            //    // Add roles
-            //    if (rolesToAdd.Any())
-            //        await _userManager.AddToRolesAsync(user, rolesToAdd);
-            //}
-
             _userRepository.UpdateUser(user);
             await _userRepository.SaveChangesAsync();
 

@@ -8,9 +8,9 @@ using SkillStackCSharp.DTOs.UserDTOs;
 
 namespace SkillStackCSharp.Controllers
 {
-    [ApiController]
+    [Authorize(Roles = UserRoles.Admin)]
     [Route("api/[controller]")]
-    [Authorize]
+    [ApiController]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -22,7 +22,6 @@ namespace SkillStackCSharp.Controllers
             _userService = userService;
         }
 
-        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet(Name = "GetUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -33,23 +32,14 @@ namespace SkillStackCSharp.Controllers
         [HttpGet("{id}", Name = "GetUserById")]
         public async Task<IActionResult> GetUserById(string id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userService.GetUserByIdAsync(id);
 
-            // Admin can access all or by the current user
-            if (User.IsInRole(UserRoles.Admin) || userId == id)
-            {
-                var user = await _userService.GetUserByIdAsync(id);
+            if (user == null)
+                return NotFound($"User with Id = {id} not found.");
 
-                if (user == null)
-                    return NotFound($"User with Id = {id} not found.");
-
-                return Ok(user);
-            }
-
-            return Forbid("You can only access your own data.");
+            return Ok(user);
         }
 
-        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost(Name = "PostUser")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO userDto)
         {
@@ -81,7 +71,6 @@ namespace SkillStackCSharp.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}", Name = "DeleteUser")]
         public async Task<IActionResult> DeleteUserById(string id)
         {
