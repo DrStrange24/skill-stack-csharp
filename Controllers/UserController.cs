@@ -2,6 +2,7 @@
 using SkillStackCSharp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using SkillStackCSharp.Constants;
 
 namespace SkillStackCSharp.Controllers
 {
@@ -19,7 +20,7 @@ namespace SkillStackCSharp.Controllers
             _userService = userService;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet(Name = "GetUsers")]
         public async Task<IActionResult> GetAllUsers()
         {

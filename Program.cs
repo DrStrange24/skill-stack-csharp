@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SkillStackCSharp.Constants;
 using SkillStackCSharp.Models;
 using SkillStackCSharp.Repositories.Implementations;
 using SkillStackCSharp.Repositories.Interfaces;
@@ -134,7 +135,7 @@ app.Run();
 async Task SeedRoles(IServiceProvider serviceProvider)
 {
     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roles = { "Admin", "User" };
+    string[] roles = { UserRoles.Admin, UserRoles.User };
 
     foreach (var role in roles)
     {
@@ -165,6 +166,6 @@ async Task SeedAdminUser(IServiceProvider serviceProvider)
             Email = adminEmail 
         };
         await userManager.CreateAsync(newUser, adminPassword);
-        await userManager.AddToRoleAsync(newUser, "Admin");
+        await userManager.AddToRoleAsync(newUser, UserRoles.Admin);
     }
 }
