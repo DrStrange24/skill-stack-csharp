@@ -45,17 +45,11 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Post([FromBody] CreateProductDTO productDTO)
         {
             if (productDTO == null)
-                return BadRequest("Product is null.");
+                return BadRequest("Product data is null.");
 
-            var product = new Product
-            {
-                Name = productDTO.Name,
-                Price = productDTO.Price,
-            };
+            var product = await _productService.CreateProductAsync(productDTO);
 
-            await _productService.CreateProductAsync(product);
-
-            _logger.LogInformation($"Created product: {productDTO.Name}, Price: {productDTO.Price}");
+            _logger.LogInformation($"Created product: {product.Name}, Price: {product.Price}");
 
             return CreatedAtRoute("GetProductById", new { id = product.Id }, product);
         }
@@ -79,12 +73,10 @@ namespace WebApp.Controllers
         [HttpDelete("{id}", Name = "DeleteProduct")]
         public async Task<IActionResult> Delete(string id)
         {
-            var product = await _productService.GetProductDetailsAsync(id);
+            if (id == null)
+                return NotFound($"Id is Empty");
 
-            if (product == null)
-                return NotFound($"Product with Id = {id} not found.");
-
-            await _productService.DeleteProductAsync(product);
+            await _productService.DeleteProductAsync(id);
 
             _logger.LogInformation($"Deleted product with Id = {id}");
 

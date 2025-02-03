@@ -15,25 +15,54 @@ namespace SkillStackCSharp.Services.Implementations
             _productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync()
         {
-            return await _productRepository.GetAllProductsAsync();
+            var products = await _productRepository.GetAllProductsAsync();
+            var productDTOs = products.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price
+            });
+            return productDTOs;
         }
 
-        public async Task<Product> GetProductDetailsAsync(string id)
+        public async Task<ProductDTO> GetProductDetailsAsync(string id)
         {
-            return await _productRepository.GetProductByIdAsync(id);
+            var product = await _productRepository.GetProductByIdAsync(id);
+            var productDTO = new ProductDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price
+            };
+            return productDTO;
         }
 
-        public async Task CreateProductAsync(Product product)
+        public async Task<ProductDTO> CreateProductAsync(CreateProductDTO createProductDTO)
         {
+            var product = new Product
+            {
+                Name = createProductDTO.Name,
+                Price = createProductDTO.Price,
+            };
+
             _productRepository.AddProduct(product);
             await _productRepository.SaveChangesAsync();
+
+            var productDTO = new ProductDTO()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price
+            };
+
+            return productDTO;
         }
 
-        public async Task<Product> UpdateProductAsync(string id, UpdateProductDTO updatedProduct)
+        public async Task<ProductDTO> UpdateProductAsync(string id, UpdateProductDTO updatedProduct)
         {
-            var product = await GetProductDetailsAsync(id);
+            var product = await _productRepository.GetProductByIdAsync(id);
 
             if (product == null)
                 return null;
@@ -45,11 +74,21 @@ namespace SkillStackCSharp.Services.Implementations
             _productRepository.UpdateProduct(product);
             await _productRepository.SaveChangesAsync();
 
-            return product;
+            var productDTO = new ProductDTO()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price
+            };
+
+            return productDTO;
         }
 
-        public async Task DeleteProductAsync(Product product)
+        public async Task DeleteProductAsync(string id)
         {
+            var product = await _productRepository.GetProductByIdAsync(id);
+            if (product == null)
+                return;
             _productRepository.RemoveProduct(product);
             await _productRepository.SaveChangesAsync();
         }
