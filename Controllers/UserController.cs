@@ -65,24 +65,20 @@ namespace SkillStackCSharp.Controllers
 
         // Update an existing user
         [HttpPut("{id}", Name = "UpdateUser")]
-        public async Task<IActionResult> Update(string id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUserById(string id, [FromBody] UpdateUserDTO updatedUser)
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("User ID cannot be null or empty.");
+
             if (updatedUser == null)
                 return BadRequest("Updated user is null.");
 
-            var user = await _userService.GetUserByIdAsync(id);
+            var result = await _userService.UpdateUserAsync(id, updatedUser);
 
-            if (user == null)
+            if (result == null)
                 return NotFound($"User with Id = {id} not found.");
 
-            // Update the user properties
-            //user.Name = updatedUser.Name;
-            //user.Price = updatedUser.Price;
-
-            await _userService.UpdateUserAsync(user);
-
-            return Ok(user);
+            return Ok(result);
         }
 
         [Authorize(Roles = UserRoles.Admin)]

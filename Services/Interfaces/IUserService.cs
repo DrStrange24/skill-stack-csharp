@@ -7,7 +7,7 @@ namespace SkillStackCSharp.Services.Interfaces
         Task<IEnumerable<UserDTO>> GetAllUsersAsync();
         Task<UserDTO> GetUserByIdAsync(string id);
         Task<UserDTO> CreateUserAsync(CreateUserDTO user);
-        Task UpdateUserAsync(UserDTO user);
+        Task<UserDTO> UpdateUserAsync(string id, UpdateUserDTO user);
         Task<bool> DeleteUserAsync(string id);
     }
 }

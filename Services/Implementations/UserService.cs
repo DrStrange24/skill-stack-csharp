@@ -90,10 +90,56 @@ namespace SkillStackCSharp.Services.Implementations
             return userDTO;
         }
 
-        public async Task UpdateUserAsync(UserDTO user)
+        public async Task<UserDTO> UpdateUserAsync(string id, UpdateUserDTO updateUserDTO)
         {
-            //_userRepository.UpdateUser(user);
-            //await _userRepository.SaveChangesAsync(); // Save changes to the database
+            var user = await _userRepository.GetUserByIdAsync(id);
+
+            if (user == null)
+                return null;
+
+            // Update the user properties
+            user.FirstName = updateUserDTO.FirstName;
+            user.LastName = updateUserDTO.LastName;
+            user.UserName = updateUserDTO.UserName;
+            user.Email = updateUserDTO.Email;
+
+            // Handle password update if provided
+            if (!string.IsNullOrWhiteSpace(updateUserDTO.Password))
+            {
+                var passwordHasher = new PasswordHasher<User>();
+                user.PasswordHash = passwordHasher.HashPassword(user, updateUserDTO.Password);
+            }
+
+            // to do: Update roles
+            //if (updateUserDTO.Role != null && updateUserDTO.Role.Any())
+            //{
+            //    // Remove existing roles
+            //    var currentRoles = await _userManager.GetRolesAsync(user);
+            //    var rolesToRemove = currentRoles.Except(updateUserDTO.Role).ToList();
+            //    var rolesToAdd = updateUserDTO.Roles.Except(currentRoles).ToList();
+
+            //    // Remove roles
+            //    if (rolesToRemove.Any())
+            //        await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+
+            //    // Add roles
+            //    if (rolesToAdd.Any())
+            //        await _userManager.AddToRolesAsync(user, rolesToAdd);
+            //}
+
+            _userRepository.UpdateUser(user);
+            await _userRepository.SaveChangesAsync();
+
+            var userDTO = new UserDTO() { 
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                EmailConfirmed = user.EmailConfirmed,
+            };
+
+            return userDTO;
         }
 
         public async Task<bool> DeleteUserAsync(string id)
