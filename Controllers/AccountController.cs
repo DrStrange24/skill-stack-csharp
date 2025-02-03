@@ -1,10 +1,10 @@
 ﻿using SkillStackCSharp.DTOs;
+using SkillStackCSharp.DTOs.UserDTOs;
 using SkillStackCSharp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SkillStackCSharp.Services.Implementations;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using DTOs.UserDTOs.UserDTO;
 
 namespace SkillStackCSharp.Controllers
 {

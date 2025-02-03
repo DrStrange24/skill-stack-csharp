@@ -1,5 +1,4 @@
-﻿using DTOs.UserDTOs.CreateUserDTO;
-using DTOs.UserDTOs.UserDTO;
+﻿using SkillStackCSharp.DTOs.UserDTOs;
 
 namespace SkillStackCSharp.Services.Interfaces
 {

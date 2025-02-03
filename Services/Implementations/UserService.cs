@@ -1,8 +1,7 @@
 ﻿using SkillStackCSharp.Services.Interfaces;
 using SkillStackCSharp.Repositories.Interfaces;
 using SkillStackCSharp.Models;
-using DTOs.UserDTOs.UserDTO;
-using DTOs.UserDTOs.CreateUserDTO;
+using SkillStackCSharp.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Identity;
 using SkillStackCSharp.Constants;
 

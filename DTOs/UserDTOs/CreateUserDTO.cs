@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DTOs.UserDTOs.CreateUserDTO
+﻿namespace SkillStackCSharp.DTOs.UserDTOs
 {
     public class CreateUserDTO
     {

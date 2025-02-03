@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using SkillStackCSharp.Constants;
 using System.Security.Claims;
-using DTOs.UserDTOs.CreateUserDTO;
+using SkillStackCSharp.DTOs.UserDTOs;
 
 namespace SkillStackCSharp.Controllers
 {
