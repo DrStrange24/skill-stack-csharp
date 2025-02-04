@@ -1,4 +1,6 @@
-﻿using SkillStackCSharp.DTOs.ProductDTOs;
+﻿using AutoMapper;
+using SkillStackCSharp.DTOs.ProductDTOs;
+using SkillStackCSharp.DTOs.UserDTOs;
 using SkillStackCSharp.Models;
 using SkillStackCSharp.Repositories.Interfaces;
 using SkillStackCSharp.Services.Interfaces;
@@ -9,21 +11,18 @@ namespace SkillStackCSharp.Services.Implementations
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync()
         {
             var products = await _productRepository.GetAllProductsAsync();
-            var productDTOs = products.Select(p => new ProductDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price
-            });
+            var productDTOs = _mapper.Map<IEnumerable<ProductDTO>>(products);
             return productDTOs;
         }
 
@@ -34,33 +33,17 @@ namespace SkillStackCSharp.Services.Implementations
             if (product == null)
                 return null;
 
-            var productDTO = new ProductDTO
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price
-            };
+            var productDTO = _mapper.Map<ProductDTO>(product);
+
             return productDTO;
         }
 
         public async Task<ProductDTO> CreateProductAsync(CreateProductDTO createProductDTO)
         {
-            var product = new Product
-            {
-                Name = createProductDTO.Name,
-                Price = createProductDTO.Price,
-            };
-
+            var product = _mapper.Map<Product>(createProductDTO);
             _productRepository.AddProduct(product);
             await _productRepository.SaveChangesAsync();
-
-            var productDTO = new ProductDTO()
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price
-            };
-
+            var productDTO = _mapper.Map<ProductDTO>(product);
             return productDTO;
         }
 
@@ -71,19 +54,12 @@ namespace SkillStackCSharp.Services.Implementations
             if (product == null)
                 return null;
 
-            // Update the product properties
-            product.Name = updatedProduct.Name;
-            product.Price = updatedProduct.Price;
+            _mapper.Map(updatedProduct, product);
 
             _productRepository.UpdateProduct(product);
             await _productRepository.SaveChangesAsync();
 
-            var productDTO = new ProductDTO()
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price
-            };
+            var productDTO = _mapper.Map<ProductDTO>(product);
 
             return productDTO;
         }

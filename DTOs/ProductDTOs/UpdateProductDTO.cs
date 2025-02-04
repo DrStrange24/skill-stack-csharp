@@ -9,5 +9,4 @@ namespace SkillStackCSharp.DTOs.ProductDTOs
         [Required]
         public decimal Price { get; set; }
     }
-
 }
