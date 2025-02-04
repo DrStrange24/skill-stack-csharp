@@ -131,7 +131,7 @@ namespace SkillStackCSharp.Controllers
         [Authorize]
         public async Task<IActionResult> GetProfile()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User is not authenticated.");
@@ -142,6 +142,26 @@ namespace SkillStackCSharp.Controllers
                 return NotFound("User not found.");
 
             return Ok(user);
+        }
+
+        [HttpPut("update-profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserDTO model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User is not authenticated.");
+
+            var user = await _userService.UpdateUserAsync(userId,model);
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            return Ok(new { Message = "Profile updated successfully." });
         }
 
         private async void SendEmailConfirmation(User user)

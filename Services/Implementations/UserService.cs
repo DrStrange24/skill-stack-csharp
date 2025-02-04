@@ -98,10 +98,10 @@ namespace SkillStackCSharp.Services.Implementations
                 return null;
 
             // Update the user properties
-            user.FirstName = updateUserDTO.FirstName;
-            user.LastName = updateUserDTO.LastName;
-            user.UserName = updateUserDTO.UserName;
-            user.Email = updateUserDTO.Email;
+            user.FirstName = updateUserDTO.FirstName ?? user.FirstName;
+            user.LastName = updateUserDTO.LastName ?? user.LastName;
+            user.UserName = updateUserDTO.UserName ?? user.UserName;
+            user.Email = updateUserDTO.Email ?? user.Email;
 
             _userRepository.UpdateUser(user);
             await _userRepository.SaveChangesAsync();
