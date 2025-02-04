@@ -45,17 +45,11 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Post([FromBody] CreateProductDTO productDTO)
         {
             if (productDTO == null)
-                return BadRequest("Product is null.");
+                return BadRequest("Product data is null.");
 
-            var product = new Product
-            {
-                Name = productDTO.Name,
-                Price = productDTO.Price,
-            };
+            var product = await _productService.CreateProductAsync(productDTO);
 
-            await _productService.CreateProductAsync(product);
-
-            _logger.LogInformation($"Created product: {productDTO.Name}, Price: {productDTO.Price}");
+            _logger.LogInformation($"Created product: {product.Name}, Price: {product.Price}");
 
             return CreatedAtRoute("GetProductById", new { id = product.Id }, product);
         }
@@ -67,30 +61,25 @@ namespace WebApp.Controllers
             if (updatedProduct == null)
                 return BadRequest("Updated product is null.");
 
-            var product = await _productService.GetProductDetailsAsync(id);
+            var result = await _productService.UpdateProductAsync(id,updatedProduct);
 
-            if (product == null)
+            if (result == null)
                 return NotFound($"Product with Id = {id} not found.");
 
-            // Update the product properties
-            product.Name = updatedProduct.Name;
-            product.Price = updatedProduct.Price;
-
-            await _productService.UpdateProductAsync(product);
-
-            return Ok(product);
+            return Ok(result);
         }
 
         // Delete a product by Id
         [HttpDelete("{id}", Name = "DeleteProduct")]
         public async Task<IActionResult> Delete(string id)
         {
-            var product = await _productService.GetProductDetailsAsync(id);
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("Product ID cannot be null or empty.");
 
-            if (product == null)
+            var result = await _productService.DeleteProductAsync(id);
+
+            if (!result)
                 return NotFound($"Product with Id = {id} not found.");
-
-            await _productService.DeleteProductAsync(product);
 
             _logger.LogInformation($"Deleted product with Id = {id}");
 

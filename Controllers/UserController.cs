@@ -2,12 +2,15 @@
 using SkillStackCSharp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using SkillStackCSharp.Constants;
+using System.Security.Claims;
+using SkillStackCSharp.DTOs.UserDTOs;
 
 namespace SkillStackCSharp.Controllers
 {
-    [ApiController]
+    [Authorize(Roles = UserRoles.Admin)]
     [Route("api/[controller]")]
-    [Authorize]
+    [ApiController]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -19,18 +22,15 @@ namespace SkillStackCSharp.Controllers
             _userService = userService;
         }
 
-        // Get all users
         [HttpGet(Name = "GetUsers")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllUsers()
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
 
-        // Get a user by Id
         [HttpGet("{id}", Name = "GetUserById")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetUserById(string id)
         {
             var user = await _userService.GetUserByIdAsync(id);
 
@@ -40,54 +40,47 @@ namespace SkillStackCSharp.Controllers
             return Ok(user);
         }
 
-        // Create a new user (already provided but updated to async)
         [HttpPost(Name = "PostUser")]
-        public async Task<IActionResult> Post([FromBody] User user)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO userDto)
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
-            if (user == null)
+            if (userDto == null)
                 return BadRequest("User is null.");
 
-            //await _userService.CreateUserAsync(user);
+            var user = await _userService.CreateUserAsync(userDto);
 
-            //_logger.LogInformation($"Created user: {user.Name}, Price: {user.Price}");
+            _logger.LogInformation($"Created user: {user.UserName}, Email: {user.Email}");
 
             return CreatedAtRoute("GetUserById", new { id = user.Id }, user);
         }
 
         // Update an existing user
         [HttpPut("{id}", Name = "UpdateUser")]
-        public async Task<IActionResult> Update(string id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUserById(string id, [FromBody] UpdateUserDTO updatedUser)
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("User ID cannot be null or empty.");
+
             if (updatedUser == null)
                 return BadRequest("Updated user is null.");
 
-            var user = await _userService.GetUserByIdAsync(id);
+            var result = await _userService.UpdateUserAsync(id, updatedUser);
 
-            if (user == null)
+            if (result == null)
                 return NotFound($"User with Id = {id} not found.");
 
-            // Update the user properties
-            //user.Name = updatedUser.Name;
-            //user.Price = updatedUser.Price;
-
-            await _userService.UpdateUserAsync(user);
-
-            return Ok(user);
+            return Ok(result);
         }
 
-        // Delete a user by Id
         [HttpDelete("{id}", Name = "DeleteUser")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> DeleteUserById(string id)
         {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, "This endpoint is currently under construction");
-            var user = await _userService.GetUserByIdAsync(id);
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("User ID cannot be null or empty.");
 
-            if (user == null)
+            var result = await _userService.DeleteUserAsync(id);
+
+            if (!result)
                 return NotFound($"User with Id = {id} not found.");
-
-            await _userService.DeleteUserAsync(user);
 
             _logger.LogInformation($"Deleted user with Id = {id}");
 

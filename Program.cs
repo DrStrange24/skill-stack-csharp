@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SkillStackCSharp.Constants;
 using SkillStackCSharp.Models;
 using SkillStackCSharp.Repositories.Implementations;
 using SkillStackCSharp.Repositories.Interfaces;
@@ -120,4 +121,51 @@ app.UseAuthorization();   // This line should be after UseAuthentication()
 
 app.MapControllers();
 
+// Seed roles during application startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await SeedRoles(services);
+    await SeedAdminUser(services);
+}
+
+
 app.Run();
+
+async Task SeedRoles(IServiceProvider serviceProvider)
+{
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    string[] roles = { UserRoles.Admin, UserRoles.User };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}
+
+async Task SeedAdminUser(IServiceProvider serviceProvider)
+{
+    var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+
+    var adminUserName = builder.Configuration["DefaultAdmin:UserName"];
+    var adminEmail = builder.Configuration["DefaultAdmin:Email"];
+    var adminPassword = builder.Configuration["DefaultAdmin:Password"];
+
+    // Check if the user already exists
+    var user = await userManager.FindByEmailAsync(adminEmail);
+    if (user == null)
+    {
+        // Create a new admin user
+        var newUser = new User { 
+            FirstName = "admin", 
+            LastName="admin",
+            UserName = adminUserName, 
+            Email = adminEmail 
+        };
+        await userManager.CreateAsync(newUser, adminPassword);
+        await userManager.AddToRoleAsync(newUser, UserRoles.Admin);
+    }
+}

@@ -1,13 +1,14 @@
-﻿using SkillStackCSharp.Models;
+﻿using SkillStackCSharp.DTOs.ProductDTOs;
+using SkillStackCSharp.Models;
 
 namespace SkillStackCSharp.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<IEnumerable<Product>> GetAllProductsAsync();
-        Task<Product> GetProductDetailsAsync(string id);
-        Task CreateProductAsync(Product product);
-        Task UpdateProductAsync(Product product);
-        Task DeleteProductAsync(Product product);
+        Task<IEnumerable<ProductDTO>> GetAllProductsAsync();
+        Task<ProductDTO> GetProductDetailsAsync(string id);
+        Task<ProductDTO> CreateProductAsync(CreateProductDTO product);
+        Task<ProductDTO> UpdateProductAsync(string id, UpdateProductDTO product);
+        Task<bool> DeleteProductAsync(string id);
     }
 }

@@ -1,13 +1,13 @@
-﻿using SkillStackCSharp.DTOs;
+﻿using SkillStackCSharp.DTOs.UserDTOs;
 using SkillStackCSharp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SkillStackCSharp.Services.Implementations;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using SkillStackCSharp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using System.Net;
-using System.Net.Mail;
-using Azure.Core;
+using System.Security.Claims;
+using SkillStackCSharp.DTOs.AccountDTOs;
 
 namespace SkillStackCSharp.Controllers
 {
@@ -19,18 +19,24 @@ namespace SkillStackCSharp.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly JwtTokenService _jwtTokenService;
         private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
         public AccountController(
             UserManager<User> userManager, 
             SignInManager<User> signInManager,
             JwtTokenService jwtTokenService,
-            IEmailSender emailSender
+            IEmailSender emailSender,
+            IConfiguration configuration,
+            IUserService userService
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtTokenService = jwtTokenService;
             _emailSender = emailSender;
+            _configuration = configuration;
+            _userService = userService;
         }
 
         [HttpPost("signup")]
@@ -83,13 +89,13 @@ namespace SkillStackCSharp.Controllers
                 var token = _jwtTokenService.GenerateToken(user);
                 var userDTO = new UserDTO() { 
                     Id = user.Id,
-                    Username = user.UserName,
+                    UserName = user.UserName,
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     EmailConfirmed = user.EmailConfirmed,
                 };
-                return Ok(new { Token = token, Message = "Login successful", User = userDTO });
+                return Ok(new { Token = token.Result, Message = "Login successful", User = userDTO });
             }
 
             if (result.IsLockedOut) return Forbid("User account is locked out.");
@@ -100,31 +106,89 @@ namespace SkillStackCSharp.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            var baseURL = "http://localhost:3000";
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             {
-                return Redirect($"{baseURL}/login?status=failure&message=User%20ID%20and%20token%20are%20required.");
+                return BadRequest(new { Message = "User ID and token are required." });
             }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return Redirect($"{baseURL}/login?status=failure&message=Unable%20to%20find%20user%20with%20ID%20'{userId}'.");
+                return NotFound(new { Message = $"Unable to find user with ID '{userId}'." });
             }
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
+
             if (result.Succeeded)
             {
-                return Redirect($"{baseURL}/login?status=success&message=Email%20confirmed%20successfully!");
+                return Ok(new { Message = "Email confirmed successfully!" });
             }
 
-            return Redirect($"{baseURL}/login?status=failure&message=Error%20confirming%20email.");
+            return BadRequest(new { Message = "Error confirming email.", result.Errors });
         }
+
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<IActionResult> GetProfile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User is not authenticated.");
+
+            var user = await _userService.GetUserByIdAsync(userId);
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            return Ok(user);
+        }
+
+        [HttpPut("update-profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserDTO model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User is not authenticated.");
+
+            var user = await _userService.UpdateUserAsync(userId,model);
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            return Ok(new { Message = "Profile updated successfully." });
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User is not authenticated.");
+
+            var result = await _userService.ChangePasswordAsync(userId, model.CurrentPassword, model.NewPassword);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok(new { Message = "Password changed successfully." });
+        }
+
 
         private async void SendEmailConfirmation(User user)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token }, Request.Scheme);
+            var baseURL = _configuration["AppSettings:BaseUrl"];
+            var confirmationLink = $"{baseURL}/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}";
             var subject = "SkillStackCSharp Email Confirmation";
             string message = $@"
                 <html>
