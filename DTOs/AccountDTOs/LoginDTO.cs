@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DTOs.AccountDTOs
+namespace SkillStackCSharp.DTOs.AccountDTOs
 {
     public class LoginDTO
     {

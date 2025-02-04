@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using SkillStackCSharp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using DTOs.AccountDTOs;
 using SkillStackCSharp.DTOs.AccountDTOs;
 
 namespace SkillStackCSharp.Controllers
