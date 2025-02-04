@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SkillStackCSharp.DTOs.ProductDTOs;
+using SkillStackCSharp.DTOs.UserDTOs;
 using SkillStackCSharp.Models;
 
 namespace SkillStackCSharp.Mappings
@@ -9,6 +10,7 @@ namespace SkillStackCSharp.Mappings
         public MappingProfile()
         {
             ProductMapping();
+            UserMapping();
         }
 
         private void ProductMapping()
@@ -17,7 +19,20 @@ namespace SkillStackCSharp.Mappings
             CreateMap<CreateProductDTO, Product>()
                 .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString());
             CreateMap<UpdateProductDTO, Product>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore());
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+        }
+
+        private void UserMapping()
+        {
+            CreateMap<User, UserDTO>();
+            CreateMap<CreateUserDTO, User>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
+            CreateMap<UpdateUserDTO, User>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

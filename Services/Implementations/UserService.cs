@@ -4,6 +4,8 @@ using SkillStackCSharp.Models;
 using SkillStackCSharp.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Identity;
 using SkillStackCSharp.Constants;
+using SkillStackCSharp.DTOs.ProductDTOs;
+using AutoMapper;
 
 namespace SkillStackCSharp.Services.Implementations
 {
@@ -12,80 +14,56 @@ namespace SkillStackCSharp.Services.Implementations
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
-        {
+        public UserService(
+            IUserRepository userRepository, 
+            UserManager<User> userManager, 
+            RoleManager<IdentityRole> roleManager,
+            IMapper mapper
+        ) {
             _userRepository = userRepository;
             _userManager = userManager;
             _roleManager = roleManager;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();
-
-            // Map User entities to UserDTO
-            var userDto = users.Select(user => new UserDTO
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName =  user.LastName,
-                EmailConfirmed = user.EmailConfirmed
-            });
-
-            return userDto;
+            var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
+            return userDTOs;
         }
 
         public async Task<UserDTO> GetUserByIdAsync(string id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
-
             if (user == null) return null;
-
-            var userDTO = new UserDTO() { 
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserName = user.UserName,
-                EmailConfirmed = user.EmailConfirmed,
-            };
-
+            var userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }
 
         public async Task<UserDTO> CreateUserAsync(CreateUserDTO createUserDTO)
         {
-            var user = new User()
-            {
-                UserName = createUserDTO.UserName,
-                Email = createUserDTO.Email,
-                FirstName = createUserDTO.FirstName,
-                LastName = createUserDTO.LastName
-            };
+            var user = _mapper.Map<User>(createUserDTO);
 
             var result = await _userManager.CreateAsync(user, createUserDTO.Password);
 
             if (!result.Succeeded)
                 throw new Exception("User creation failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
 
-            if(createUserDTO.Role == null)
-                await _userManager.AddToRoleAsync(user, UserRoles.User);
-            else if (await _roleManager.RoleExistsAsync(createUserDTO.Role))
-                await _userManager.AddToRoleAsync(user, createUserDTO.Role);
+
+            await _userManager.AddToRoleAsync(user, UserRoles.User);
+
+            // to do:
+            //if (createUserDTO.Role == null)
+            //    await _userManager.AddToRoleAsync(user, UserRoles.User);
+            //else if (await _roleManager.RoleExistsAsync(createUserDTO.Role))
+            //    await _userManager.AddToRoleAsync(user, createUserDTO.Role);
         
             await _userRepository.SaveChangesAsync();
 
-            var userDTO = new UserDTO() { 
-                Id=user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserName = user.UserName,
-                EmailConfirmed = user.EmailConfirmed,
-            };
+            var userDTO = _mapper.Map<UserDTO>(user);
 
             return userDTO;
         }
@@ -93,28 +71,11 @@ namespace SkillStackCSharp.Services.Implementations
         public async Task<UserDTO> UpdateUserAsync(string id, UpdateUserDTO updateUserDTO)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
-
-            if (user == null)
-                return null;
-
-            // Update the user properties
-            user.FirstName = updateUserDTO.FirstName ?? user.FirstName;
-            user.LastName = updateUserDTO.LastName ?? user.LastName;
-            user.UserName = updateUserDTO.UserName ?? user.UserName;
-            user.Email = updateUserDTO.Email ?? user.Email;
-
+            if (user == null) return null;
+            _mapper.Map(updateUserDTO, user);
             _userRepository.UpdateUser(user);
             await _userRepository.SaveChangesAsync();
-
-            var userDTO = new UserDTO() { 
-                Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                EmailConfirmed = user.EmailConfirmed,
-            };
-
+            var userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }
 
