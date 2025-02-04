@@ -130,5 +130,12 @@ namespace SkillStackCSharp.Services.Implementations
 
             return true;
         }
+
+        public async Task<IdentityResult> ChangePasswordAsync(string id,string oldPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            return result;
+        }
     }
 }

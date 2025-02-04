@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SkillStackCSharp.DTOs
+namespace DTOs.AccountDTOs
 {
     public class SignupDTO
     {

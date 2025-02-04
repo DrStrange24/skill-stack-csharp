@@ -1,5 +1,4 @@
-﻿using SkillStackCSharp.DTOs;
-using SkillStackCSharp.DTOs.UserDTOs;
+﻿using SkillStackCSharp.DTOs.UserDTOs;
 using SkillStackCSharp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using SkillStackCSharp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using DTOs.AccountDTOs;
+using SkillStackCSharp.DTOs.AccountDTOs;
 
 namespace SkillStackCSharp.Controllers
 {
@@ -163,6 +164,26 @@ namespace SkillStackCSharp.Controllers
 
             return Ok(new { Message = "Profile updated successfully." });
         }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User is not authenticated.");
+
+            var result = await _userService.ChangePasswordAsync(userId, model.CurrentPassword, model.NewPassword);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok(new { Message = "Password changed successfully." });
+        }
+
 
         private async void SendEmailConfirmation(User user)
         {
