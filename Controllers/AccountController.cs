@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SkillStackCSharp.Services.Implementations;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using SkillStackCSharp.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace SkillStackCSharp.Controllers
 {
@@ -17,13 +20,15 @@ namespace SkillStackCSharp.Controllers
         private readonly JwtTokenService _jwtTokenService;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
         public AccountController(
             UserManager<User> userManager, 
             SignInManager<User> signInManager,
             JwtTokenService jwtTokenService,
             IEmailSender emailSender,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IUserService userService
         )
         {
             _userManager = userManager;
@@ -31,6 +36,7 @@ namespace SkillStackCSharp.Controllers
             _jwtTokenService = jwtTokenService;
             _emailSender = emailSender;
             _configuration = configuration;
+            _userService = userService;
         }
 
         [HttpPost("signup")]
@@ -119,6 +125,23 @@ namespace SkillStackCSharp.Controllers
             }
 
             return BadRequest(new { Message = "Error confirming email.", result.Errors });
+        }
+
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<IActionResult> GetProfile()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User is not authenticated.");
+
+            var user = await _userService.GetUserByIdAsync(userId);
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            return Ok(user);
         }
 
         private async void SendEmailConfirmation(User user)
