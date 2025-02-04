@@ -52,7 +52,6 @@ namespace SkillStackCSharp.Services.Implementations
             if (!result.Succeeded)
                 throw new Exception("User creation failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
 
-
             await _userManager.AddToRoleAsync(user, UserRoles.User);
 
             // to do:

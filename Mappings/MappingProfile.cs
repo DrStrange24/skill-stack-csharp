@@ -24,7 +24,7 @@ namespace SkillStackCSharp.Mappings
 
         private void UserMapping()
         {
-            CreateMap<User, UserDTO>();
+            CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<CreateUserDTO, User>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
