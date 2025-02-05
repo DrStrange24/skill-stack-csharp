@@ -82,8 +82,7 @@ namespace SkillStackCSharp.Controllers
             {
                 var token = _jwtTokenService.GenerateToken(user);
                 var userDTO = _mapper.Map<UserDTO>(user);
-                await _userService.MapRole(userDTO, user);
-                return Ok(new { Token = token.Result, Message = "Login successful", User = userDTO });
+                return Ok(new { Token = token.Result, Message = "Login successful", User = new { userDTO.Id } });
             }
 
             if (result.IsLockedOut) return Forbid("User account is locked out.");
