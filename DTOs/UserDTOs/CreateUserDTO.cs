@@ -24,5 +24,6 @@ namespace SkillStackCSharp.DTOs.UserDTOs
         [Required]
         [StringLength(50, ErrorMessage = "Last Name cannot be longer than 50 characters.")]
         public string LastName { get; set; }
+        public List<string>? Roles { get; set; } = new List<string>();
     }
 }
