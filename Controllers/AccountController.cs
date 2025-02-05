@@ -82,6 +82,7 @@ namespace SkillStackCSharp.Controllers
             {
                 var token = _jwtTokenService.GenerateToken(user);
                 var userDTO = _mapper.Map<UserDTO>(user);
+                await _userService.MapRole(userDTO, user);
                 return Ok(new { Token = token.Result, Message = "Login successful", User = userDTO });
             }
 
@@ -127,7 +128,7 @@ namespace SkillStackCSharp.Controllers
 
         [HttpPut("update-profile")]
         [Authorize]
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserDTO model)
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDTO model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -137,12 +138,13 @@ namespace SkillStackCSharp.Controllers
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User is not authenticated.");
 
-            var user = await _userService.UpdateUserAsync(userId,model);
+            var updateProfileDTO = _mapper.Map<UpdateUserDTO>(model);
+            var user = await _userService.UpdateUserAsync(userId, updateProfileDTO);
 
             if (user == null)
                 return NotFound("User not found.");
 
-            return Ok(new { Message = "Profile updated successfully." });
+            return Ok(new { Message = "Profile updated successfully."});
         }
 
         [HttpPost("change-password")]

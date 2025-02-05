@@ -11,6 +11,8 @@ namespace SkillStackCSharp.Mappings
         {
             ProductMapping();
             UserMapping();
+
+            CreateMap<UpdateProfileDTO, UpdateUserDTO>();
         }
 
         private void ProductMapping()

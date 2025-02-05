@@ -15,17 +15,20 @@ namespace SkillStackCSharp.Services.Implementations
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
+        private readonly IServiceProvider _serviceProvider;
 
         public UserService(
             IUserRepository userRepository, 
             UserManager<User> userManager, 
             RoleManager<IdentityRole> roleManager,
-            IMapper mapper
+            IMapper mapper,
+            IServiceProvider serviceProvider
         ) {
             _userRepository = userRepository;
             _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
@@ -37,17 +40,11 @@ namespace SkillStackCSharp.Services.Implementations
             {
                 
                 var userDTO = _mapper.Map<UserDTO>(user);
-                await MapRoleDTO(userDTO, user);
+                await MapRole(userDTO, user);
                 userDTOs.Add(userDTO);
             }
 
             return userDTOs;
-        }
-
-        private async Task MapRoleDTO(UserDTO userDTO, User user)
-        {
-            var roles = await _userManager.GetRolesAsync(user);
-            userDTO.Roles = roles.ToList();
         }
 
         public async Task<UserDTO> GetUserByIdAsync(string id)
@@ -56,7 +53,7 @@ namespace SkillStackCSharp.Services.Implementations
             if (user == null) return null;
             var roles = await _userManager.GetRolesAsync(user);
             var userDTO = _mapper.Map<UserDTO>(user);
-            await MapRoleDTO(userDTO, user);
+            await MapRole(userDTO, user);
             return userDTO;
         }
 
@@ -82,7 +79,7 @@ namespace SkillStackCSharp.Services.Implementations
             await _userRepository.SaveChangesAsync();
 
             var userDTO = _mapper.Map<UserDTO>(user);
-            await MapRoleDTO(userDTO, user);
+            await MapRole(userDTO, user);
 
             return userDTO;
         }
@@ -136,7 +133,7 @@ namespace SkillStackCSharp.Services.Implementations
             await _userRepository.SaveChangesAsync();
 
             var userDTO = _mapper.Map<UserDTO>(user);
-            await MapRoleDTO(userDTO, user);
+            await MapRole(userDTO, user);
 
             return userDTO;
         }
@@ -159,6 +156,17 @@ namespace SkillStackCSharp.Services.Implementations
             var user = await _userManager.FindByIdAsync(id);
             var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
             return result;
+        }
+
+        public async Task MapRole(UserDTO destination, User source)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                var roles = await userManager.GetRolesAsync(source);
+                if (roles.Contains("Admin"))
+                    destination.Roles = roles.ToList();
+            }
         }
     }
 }
