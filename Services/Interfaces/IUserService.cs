@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SkillStackCSharp.DTOs.UserDTOs;
+using SkillStackCSharp.Models;
 
 namespace SkillStackCSharp.Services.Interfaces
 {
@@ -11,5 +12,6 @@ namespace SkillStackCSharp.Services.Interfaces
         Task<UserDTO> UpdateUserAsync(string id, UpdateUserDTO user);
         Task<bool> DeleteUserAsync(string id);
         Task<IdentityResult> ChangePasswordAsync(string id, string oldPassword, string newPassword);
+        Task MapRole(UserDTO destination, User source);
     }
 }

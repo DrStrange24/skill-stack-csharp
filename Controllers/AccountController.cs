@@ -8,6 +8,7 @@ using SkillStackCSharp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using SkillStackCSharp.DTOs.AccountDTOs;
+using AutoMapper;
 
 namespace SkillStackCSharp.Controllers
 {
@@ -21,6 +22,7 @@ namespace SkillStackCSharp.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
         public AccountController(
             UserManager<User> userManager, 
@@ -28,7 +30,8 @@ namespace SkillStackCSharp.Controllers
             JwtTokenService jwtTokenService,
             IEmailSender emailSender,
             IConfiguration configuration,
-            IUserService userService
+            IUserService userService,
+            IMapper mapper
         )
         {
             _userManager = userManager;
@@ -37,31 +40,22 @@ namespace SkillStackCSharp.Controllers
             _emailSender = emailSender;
             _configuration = configuration;
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpPost("signup")]
-        public async Task<IActionResult> Signup([FromBody] SignupDTO model)
+        public async Task<IActionResult> Signup([FromBody] CreateUserDTO model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
-            var user = new User
-            {
-                UserName = model.Username,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-            };
 
-            // Save the user to the database
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var userDTO = await _userService.CreateUserAsync(model);
 
-            if (result.Succeeded)
-            {
-                SendEmailConfirmation(user);
-                return Ok(new { Message = "User created successfully!" });
-            }
+            if (userDTO == null)
+                return BadRequest("User creation failed.");
 
-            return BadRequest(result.Errors);
+            var user = _mapper.Map<User>(userDTO);
+            SendEmailConfirmation(user);
+            return Ok(new { Message = "User created successfully! Confirmation email sent." });
         }
 
         [HttpPost("login")]
@@ -87,15 +81,7 @@ namespace SkillStackCSharp.Controllers
             if (result.Succeeded)
             {
                 var token = _jwtTokenService.GenerateToken(user);
-                var userDTO = new UserDTO() { 
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    EmailConfirmed = user.EmailConfirmed,
-                };
-                return Ok(new { Token = token.Result, Message = "Login successful", User = userDTO });
+                return Ok(new { Token = token.Result, Message = "Login successful" });
             }
 
             if (result.IsLockedOut) return Forbid("User account is locked out.");
@@ -107,22 +93,16 @@ namespace SkillStackCSharp.Controllers
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
-            {
                 return BadRequest(new { Message = "User ID and token are required." });
-            }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-            {
                 return NotFound(new { Message = $"Unable to find user with ID '{userId}'." });
-            }
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
             if (result.Succeeded)
-            {
                 return Ok(new { Message = "Email confirmed successfully!" });
-            }
 
             return BadRequest(new { Message = "Error confirming email.", result.Errors });
         }
@@ -146,7 +126,7 @@ namespace SkillStackCSharp.Controllers
 
         [HttpPut("update-profile")]
         [Authorize]
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserDTO model)
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDTO model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -156,12 +136,13 @@ namespace SkillStackCSharp.Controllers
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User is not authenticated.");
 
-            var user = await _userService.UpdateUserAsync(userId,model);
+            var updateProfileDTO = _mapper.Map<UpdateUserDTO>(model);
+            var user = await _userService.UpdateUserAsync(userId, updateProfileDTO);
 
             if (user == null)
                 return NotFound("User not found.");
 
-            return Ok(new { Message = "Profile updated successfully." });
+            return Ok(new { Message = "Profile updated successfully."});
         }
 
         [HttpPost("change-password")]

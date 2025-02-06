@@ -11,6 +11,6 @@ namespace SkillStackCSharp.DTOs.UserDTOs
         public string LastName { get; set; }
         public string UserName { get; set; }
         public bool EmailConfirmed { get; set; }
-
+        public List<string> Roles { get; set; } = new List<string>();
     }
 }

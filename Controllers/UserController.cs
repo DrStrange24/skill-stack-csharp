@@ -1,9 +1,7 @@
-﻿using SkillStackCSharp.Models;
-using SkillStackCSharp.Services.Interfaces;
+﻿using SkillStackCSharp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using SkillStackCSharp.Constants;
-using System.Security.Claims;
 using SkillStackCSharp.DTOs.UserDTOs;
 
 namespace SkillStackCSharp.Controllers
