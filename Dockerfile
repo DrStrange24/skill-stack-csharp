@@ -7,7 +7,7 @@ WORKDIR /src
 
 COPY ["skill-stack-csharp.csproj", "skill-stack-csharp/"]
 
-RUN dotnet restore "skill-stack-csharp.csproj"
+RUN dotnet restore "skill-stack-csharp/skill-stack-csharp.csproj"
 
 COPY . .
 WORKDIR "/src/skill-stack-csharp"
