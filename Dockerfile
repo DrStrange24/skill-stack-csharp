@@ -6,12 +6,12 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY ["skill-stack-csharp.csproj", "skill-stack-csharp/"]
+COPY . .
 
 RUN dotnet restore "skill-stack-csharp/skill-stack-csharp.csproj"
 
-COPY . .
 WORKDIR "/src/skill-stack-csharp"
-RUN dotnet build "skill-stack-csharp.csproj" -c Release -o /app/build
+RUN dotnet build "skill-stack-csharp.csproj" -c Release -o /app/build --verbosity detailed
 
 FROM build AS publish
 RUN dotnet publish "skill-stack-csharp.csproj" -c Release -o /app/publish
