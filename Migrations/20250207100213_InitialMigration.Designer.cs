@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace SkillStackCSharp.Migrations
+namespace skillstackcsharp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250129143121_InitialMigration")]
+    [Migration("20250207100213_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
