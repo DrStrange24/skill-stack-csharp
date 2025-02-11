@@ -11,6 +11,8 @@ COPY . .
 RUN dotnet restore "skill-stack-csharp/skill-stack-csharp.csproj"
 
 WORKDIR "/src/skill-stack-csharp"
+
+# Add --verbosity detailed to get more detailed build logs
 RUN dotnet build "skill-stack-csharp.csproj" -c Release -o /app/build --verbosity detailed
 
 FROM build AS publish
