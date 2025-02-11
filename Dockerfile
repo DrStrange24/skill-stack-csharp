@@ -5,7 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["skill-stack-csharp.csproj", "skill-stack-csharp/"]
+COPY ["skill-stack-csharp/skill-stack-csharp.csproj", "skill-stack-csharp/"]
 COPY . .
 
 RUN dotnet restore "skill-stack-csharp/skill-stack-csharp.csproj"
